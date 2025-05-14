@@ -3,6 +3,23 @@ const sequelize = require('../config/database');
 const jwt = require('jsonwebtoken');
 const Librarian = require('../models/Librarian')(sequelize);
 
+//JWT защита
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split('Bearer ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Не выполнена авторизация.' });
+    }
+
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        req.userData = decodedToken;
+        next();
+    } catch (err) {
+        return res.status(401).json({ error: 'Некорректный токен.' });
+    }
+};
+
 //Регистрация
 /** 
     * @swagger 
@@ -172,7 +189,8 @@ exports.loginLibrarian = async (req, res) => {
 
         const tokenPayload = {
             id: librarian.librarian_id,
-            iat: Math.floor(Date.now() / 1000)
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor((Date.now() / 1000) + 3600)
         };
 
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY);
@@ -185,9 +203,176 @@ exports.loginLibrarian = async (req, res) => {
 };
 
 //Загрузка данных библиотекаря (ФИО)
+/** 
+ * @swagger 
+ * /librarian/:librarian_id:
+ *   get:
+ *     summary: Профиль текущего библиотекаря
+ *     security:
+ *       - bearerAuth: []  # Необходима аутентификация по Bearer Token
+ *     tags: ["Профиль"]  # Тег группы методов связанных с профилем
+ *     responses:
+ *       200:
+ *         description: Данные текущего библиотекаря
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 librarian_id:
+ *                   type: integer
+ *                   description: Уникальный идентификатор библиотекаря
+ *                 full_name:
+ *                   type: string
+ *                   description: Полное имя библиотекаря
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   description: Электронный адрес библиотекаря
+ *       401:
+ *         description: Нет доступа к ресурсу
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Ошибка доступа
+ *                   example: Недостаточно прав для просмотра данных
+ *       404:
+ *         description: Библиотекарь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Ошибка отсутствия данных
+ *                   example: Библиотекарь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Сообщение об ошибке
+ *                   example: Произошла внутренняя ошибка сервера
+ */
+
+exports.getLibrarianData = [
+    authMiddleware,
+    async (req, res) => {
+        try {
+            const librarian = await Librarian.findOne({
+                where: { librarian_id: req.params.librarian_id },
+                attributes: ['librarian_id', 'full_name', 'email']
+            });
+    
+            if (!librarian) {
+                return res.status(404).send('Библиотекарь не найден.');
+            }
+    
+            res.json(librarian.toJSON());
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Ошибка сервера.');
+        }
+    }
+]
 
 //Выход из аккаунта
 
 //Удаление аккаунта
+/**
+ * @swagger
+ * /delete-account/:librarian_id:
+ *   delete:
+ *     summary: Удаление профиля библиотекаря
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Профиль
+ *     parameters:
+ *       - in: path
+ *         name: librarian_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор библиотекаря
+ *     responses:
+ *       '200':
+ *         description: Пользователь успешно удалён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Подтверждение успешного удаления
+ *                   example: "Аккаунт успешно удалён."
+ *       '401':
+ *         description: Нет доступа к ресурсу
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Ошибка доступа
+ *                   example: "Нет необходимых прав для выполнения данной операции"
+ *       '404':
+ *         description: Библиотекарь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Ошибка отсутствия данных
+ *                   example: "Библиотекарь не найден"
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Сообщение об ошибке
+ *                   example: "Произошла внутренняя ошибка сервера"
+ */
+
+exports.deleteLibrarian = [
+    authMiddleware,
+    async (req, res) => {
+        const { librarian_id } = req.params;
+
+        try {
+            const librarian = await Librarian.findOne({
+                where: { librarian_id },
+            });
+
+            if (!librarian) {
+                return res.status(404).send('Библиотекарь не найден.');
+            }
+
+            await librarian.destroy();
+
+            res.json({ message: "Аккаунт успешно удален." });
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Ошибка сервера.");
+        }
+    }
+]
 
 //Редактирование профиля?
