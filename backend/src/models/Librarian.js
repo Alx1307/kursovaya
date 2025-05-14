@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
             validate: {
                 isEmail: true,
                 correct_email(value) {
-                    if (!value.match(/^[a-zA-Z0-9_-]+@[a-zA-Z]+\.[a-zA-Z-.]+$/)) {
+                    if (!value.match(/^[a-zA-Z0-9_-]+@[a-zA-Z]+\.[a-zA-Z.-]+$/)) {
                         throw new Error('Некорректный email.');
                     }
                 }
@@ -36,17 +36,19 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING(20),
             allowNull: false,
             validate: {
-                len: [8, 20],
-                correct_password(value) {
-                    if (!value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/)) {
-                        throw new Error('Пароль должен содержать латинские буквы, циффры и спецсимволы и иметь длину от 8 до 20 символов.');
-                    }
-                }
+                // len: [8, 20],
+                // correct_password(value) {
+                //     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+                    
+                //     if (!regex.test(value)) {
+                //         throw new Error('Пароль должен содержать латинские буквы, цифры и спецсимволы и иметь длину от 8 до 20 символов.');
+                //     }
+                // }
             }
         }
     }, {
         tableName: 'librarian',
-        timepstamps: false
+        timestamps: false
     });
 
     return Librarian;

@@ -10,4 +10,10 @@ const sequelize = new Sequelize(
     }
 );
 
+sequelize.sync({ force: false }).then(() => {
+    console.log('Все модели синхронизированы с базой данных.');
+}).catch((err) => {
+    console.error('Ошибка синхронизации:', err);
+});
+
 module.exports = sequelize;

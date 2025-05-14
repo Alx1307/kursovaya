@@ -1,8 +1,12 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const sequelize = require('./src/config/database');
+require('dotenv').config(); 
+
+const librarianRoutes = require('./src/routes/librarianRoutes');
+
+const swaggerUI = require('swagger-ui-express');
+const swaggerSpecs = require('./src/docs/swagger');
 
 const app = express();
 app.use(express.json());
@@ -16,9 +20,11 @@ app.use(express.json());
     }
 })();
 
-app.get('/', (req, res) => {
-    res.send('<h1>Сервер запущен!</h1>');
-});
+//маршруты
+app.use('/', librarianRoutes);
+
+//Swagger
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
 const PORT = 8080;
 app.listen(PORT, async () => {
