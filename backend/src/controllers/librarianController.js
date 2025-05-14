@@ -21,68 +21,6 @@ const authMiddleware = (req, res, next) => {
 };
 
 //Регистрация
-/** 
-    * @swagger 
-    * /register: 
-    *   post: 
-    *       summary: Регистрация библиотекаря 
-    *       tags: ["Регистрация"]
-    *       requestBody:
-    *           required: true
-    *           content:
-    *               application/json:
-    *                   schema:
-    *                       type: object
-    *                       properties:
-    *                           full_name:
-    *                               type: string
-    *                               example: Иванова Александра Евгеньевна
-    *                           email:
-    *                               type: string
-    *                               format: email
-    *                               description: Адрес электронной почты библиотекаря
-    *                               example: ivan.petrov@example.com
-    *                           password:
-    *                               type: string
-    *                               format: password
-    *                               description: Пароль библиотекаря
-    *                               example: SecureP@ssword123
-    *       responses:
-    *           201:
-    *               description: Библиотекарь успешно зарегистрирован
-    *               content:
-    *                   application/json:
-    *                       schema:
-    *                           type: object
-    *                           properties:
-    *                               message:
-    *                                   type: string
-    *                                   description: Сообщение успеха
-    *                                   example: Библиотекарь успешно зарегистрирован
-    *           400:
-    *               description: Некорректные входные данные
-    *               content:
-    *                   application/json:
-    *                       schema:
-    *                           type: object
-    *                           properties:
-    *                               error:
-    *                                   type: string
-    *                                   description: Описание ошибки
-    *                                   example: Некорректный формат ввода
-    *           500:
-    *               description: Внутренняя ошибка сервера
-    *               content:
-    *                   application/json:
-    *                       schema:
-    *                           type: object
-    *                           properties:
-    *                               error:
-    *                                   type: string
-    *                                   description: Сообщение об ошибке
-    *                                   example: Произошла внутренняя ошибка сервера
-*/
-
 exports.registerLibrarian = async (req, res) => {
     const { full_name, email, password } = req.body;
     
@@ -99,76 +37,6 @@ exports.registerLibrarian = async (req, res) => {
 };
 
 //Авторизация
-/** 
- * @swagger 
- * /login: 
- *   post: 
- *       summary: Аутентификация библиотекаря
- *       tags: ["Авторизация"]
- *       requestBody:
- *           required: true
- *           content:
- *               application/json:
- *                   schema:
- *                       type: object
- *                       properties:
- *                           email:
- *                               type: string
- *                               format: email
- *                               description: Электронная почта библиотекаря
- *                               example: alexander.sidorov@example.com
- *                           password:
- *                               type: string
- *                               format: password
- *                               description: Пароль библиотекаря
- *                               example: SecurePassw0rd123
- *       responses:
- *           200:
- *               description: Успешная аутентификация
- *               content:
- *                   application/json:
- *                       schema:
- *                           type: object
- *                           properties:
- *                               token:
- *                                   type: string
- *                                   description: JWT-токен для дальнейшей авторизации
- *                                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *           404:
- *               description: Пользователь не найден
- *               content:
- *                   application/json:
- *                       schema:
- *                           type: object
- *                           properties:
- *                               error:
- *                                   type: string
- *                                   description: Ошибка авторизации
- *                                   example: Библиотекарь не найден
- *           400:
- *               description: Неверный пароль
- *               content:
- *                   application/json:
- *                       schema:
- *                           type: object
- *                           properties:
- *                               error:
- *                                   type: string
- *                                   description: Ошибка авторизации
- *                                   example: Неверный пароль
- *           500:
- *               description: Внутренняя ошибка сервера
- *               content:
- *                   application/json:
- *                       schema:
- *                           type: object
- *                           properties:
- *                               error:
- *                                   type: string
- *                                   description: Сообщение об ошибке
- *                                   example: Произошла внутренняя ошибка сервера
- */
-
 exports.loginLibrarian = async (req, res) => {
     const { email, password } = req.body;
 
@@ -203,67 +71,6 @@ exports.loginLibrarian = async (req, res) => {
 };
 
 //Загрузка данных библиотекаря (ФИО)
-/** 
- * @swagger 
- * /librarian/:librarian_id:
- *   get:
- *     summary: Профиль текущего библиотекаря
- *     security:
- *       - bearerAuth: []  # Необходима аутентификация по Bearer Token
- *     tags: ["Профиль"]  # Тег группы методов связанных с профилем
- *     responses:
- *       200:
- *         description: Данные текущего библиотекаря
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 librarian_id:
- *                   type: integer
- *                   description: Уникальный идентификатор библиотекаря
- *                 full_name:
- *                   type: string
- *                   description: Полное имя библиотекаря
- *                 email:
- *                   type: string
- *                   format: email
- *                   description: Электронный адрес библиотекаря
- *       401:
- *         description: Нет доступа к ресурсу
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Ошибка доступа
- *                   example: Недостаточно прав для просмотра данных
- *       404:
- *         description: Библиотекарь не найден
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Ошибка отсутствия данных
- *                   example: Библиотекарь не найден
- *       500:
- *         description: Внутренняя ошибка сервера
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Сообщение об ошибке
- *                   example: Произошла внутренняя ошибка сервера
- */
-
 exports.getLibrarianData = [
     authMiddleware,
     async (req, res) => {
@@ -285,72 +92,7 @@ exports.getLibrarianData = [
     }
 ]
 
-//Выход из аккаунта
-
 //Удаление аккаунта
-/**
- * @swagger
- * /delete-account/:librarian_id:
- *   delete:
- *     summary: Удаление профиля библиотекаря
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Профиль
- *     parameters:
- *       - in: path
- *         name: librarian_id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Уникальный идентификатор библиотекаря
- *     responses:
- *       '200':
- *         description: Пользователь успешно удалён
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Подтверждение успешного удаления
- *                   example: "Аккаунт успешно удалён."
- *       '401':
- *         description: Нет доступа к ресурсу
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Ошибка доступа
- *                   example: "Нет необходимых прав для выполнения данной операции"
- *       '404':
- *         description: Библиотекарь не найден
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Ошибка отсутствия данных
- *                   example: "Библиотекарь не найден"
- *       '500':
- *         description: Внутренняя ошибка сервера
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Сообщение об ошибке
- *                   example: "Произошла внутренняя ошибка сервера"
- */
-
 exports.deleteLibrarian = [
     authMiddleware,
     async (req, res) => {

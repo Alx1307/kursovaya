@@ -1,12 +1,14 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
 const sequelize = require('./src/config/database');
-require('dotenv').config(); 
+const YAML = require('yamljs');
+const swaggerUI = require('swagger-ui-express');
+require('dotenv').config();
+
 
 const librarianRoutes = require('./src/routes/librarianRoutes');
 
-const swaggerUI = require('swagger-ui-express');
-const swaggerSpecs = require('./src/docs/swagger');
+const swaggerDoc = YAML.load('./src/docs/spec.yaml');
 
 const app = express();
 app.use(express.json());
@@ -24,7 +26,7 @@ app.use(express.json());
 app.use('/', librarianRoutes);
 
 //Swagger
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 const PORT = 8080;
 app.listen(PORT, async () => {
