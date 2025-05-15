@@ -142,7 +142,7 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
-  /librarian/{librarian_id}:
+  /librarian/:librarian_id:
     get:
       summary: Профиль текущего библиотекаря
       security:
@@ -208,7 +208,7 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
-  /delete-account/{librarian_id}:
+  /delete-account/:librarian_id:
     delete:
       summary: Удаление профиля библиотекаря
       security:
@@ -245,6 +245,97 @@ paths:
                     type: string
                     description: Ошибка доступа
                     example: Нет необходимых прав для выполнения данной операции
+        '404':
+          description: Библиотекарь не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка отсутствия данных
+                    example: Библиотекарь не найден
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера
+
+  /edit-librarian/:librarian_id:
+    patch:
+      summary: Редактирование профиля библиотекаря
+      security:
+        - bearerAuth: []
+      tags:
+        - Профиль
+      parameters:
+        - in: path
+          name: librarian_id
+          required: true
+          schema:
+            type: integer
+          description: Уникальный идентификатор библиотекаря
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                  maxLength: 60
+                  description: Новое имя библиотекаря
+                email:
+                  type: string
+                  format: email
+                  maxLength: 30
+                  description: Новый электронный адрес библиотекаря
+                role:
+                  type: string
+                  maxLength: 20
+                  description: Новая роль библиотекаря
+      responses:
+        '200':
+          description: Профиль успешно обновлён
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Подтверждение успешного обновления
+                    example: Профиль успешно обновлен.
+        '401':
+          description: Нет доступа к ресурсу
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка доступа
+                    example: Нет необходимых прав для выполнения данной операции
+        '403':
+          description: Доступ запрещён
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка доступа
+                    example: Доступ запрещён.
         '404':
           description: Библиотекарь не найден
           content:
