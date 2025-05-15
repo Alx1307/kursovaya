@@ -77,13 +77,15 @@ exports.getLibrarianData = [
     authMiddleware,
     async (req, res) => {
         try {
-            if (req.params.librarian_id != req.userData.id) {
-                return res.status(403).send('Доступ запрещен.');
+            if (req.params.role !== 'Администратор') {
+                if (req.params.librarian_id != req.userData.id) {
+                    return res.status(403).send('Доступ запрещен.');
+                }
             }
 
             const librarian = await Librarian.findOne({
                 where: { librarian_id: req.params.librarian_id },
-                attributes: ['librarian_id', 'full_name', 'email']
+                attributes: ['librarian_id', 'full_name', 'email', 'role']
             });
     
             if (!librarian) {
@@ -105,6 +107,12 @@ exports.deleteLibrarian = [
         const { librarian_id } = req.params;
 
         try {
+            if (req.userData.role !== 'Администратор') {
+                if (librarian_id != req.userData.id) {
+                    return res.status(403).send('Доступ запрещен.');
+                }
+            }
+
             const librarian = await Librarian.findOne({
                 where: { librarian_id },
             });
@@ -123,4 +131,51 @@ exports.deleteLibrarian = [
     }
 ]
 
-//Редактирование профиля?
+//Редактирование профиля
+exports.editLibrarianData = [
+    authMiddleware,
+    async (req, res) => {
+        const { librarian_id } = req.params;
+    
+        try {
+            if (req.userData.role !== 'Администратор') {
+                if (librarian_id != req.userData.id) {
+                    return res.status(403).send('Доступ запрещен.');
+                }
+            }
+    
+            const updatedData = {};
+    
+            if (req.body.full_name) {
+                updatedData.full_name = req.body.full_name.trim();
+            }
+    
+            if (req.body.email) {
+                updatedData.email = req.body.email.trim();
+            }
+    
+            if (req.body.role) {
+                updatedData.role = req.body.role.trim();
+            }
+    
+            const librarian = await Librarian.findOne({
+                where: { librarian_id }
+            });
+    
+            if (!librarian) {
+                return res.status(404).send('Библиотекарь не найден.');
+            }
+    
+            Object.keys(updatedData).forEach( key => {
+                librarian[key] = updatedData[key];
+            });
+    
+            await librarian.save();
+    
+            res.status(200).send('Данные успешно обновлены.');
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Ошибка сервера.');
+        }
+    } 
+]

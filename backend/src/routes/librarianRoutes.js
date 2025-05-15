@@ -9,4 +9,6 @@ router.get('/librarian/:librarian_id', librarianController.getLibrarianData);
 
 router.delete('/delete-account/:librarian_id', librarianController.deleteLibrarian);
 
+router.patch('/edit-librarian/:librarian_id', librarianController.editLibrarianData);
+
 module.exports = router;
