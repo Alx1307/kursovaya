@@ -1,5 +1,4 @@
 const express = require('express');
-const { Sequelize } = require('sequelize');
 const database = require('./src/config/database');
 const sequelize = database.sequelize;
 const YAML = require('yamljs');

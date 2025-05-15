@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const database = require('../config/database');
 const sequelize = database.sequelize;
 const jwt = require('jsonwebtoken');
-const Librarian = require('../models/Librarian')(sequelize);
+const Librarian = require('../models/Librarian');
 
 //JWT защита
 const authMiddleware = (req, res, next) => {
@@ -58,6 +58,7 @@ exports.loginLibrarian = async (req, res) => {
 
         const tokenPayload = {
             id: librarian.librarian_id,
+            role: librarian.role,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.floor((Date.now() / 1000) + 3600)
         };
@@ -76,6 +77,10 @@ exports.getLibrarianData = [
     authMiddleware,
     async (req, res) => {
         try {
+            if (req.params.librarian_id != req.userData.id) {
+                return res.status(403).send('Доступ запрещен.');
+            }
+
             const librarian = await Librarian.findOne({
                 where: { librarian_id: req.params.librarian_id },
                 attributes: ['librarian_id', 'full_name', 'email']

@@ -1,6 +1,6 @@
 const database = require('../config/database');
 const sequelize = database.sequelize;
-const Book = require('../models/Book')(sequelize);
+const Book = require('../models/Book');
 
 //Добавление книги
 exports.createBook = async (req, res) => {
