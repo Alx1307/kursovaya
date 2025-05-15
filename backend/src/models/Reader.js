@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const database = require('../config/database');
+const sequelize = database.sequelize;
 
 module.exports = (sequelize) => {
     const Reader = sequelize.define('Reader', {

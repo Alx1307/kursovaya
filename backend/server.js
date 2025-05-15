@@ -1,29 +1,23 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
-const sequelize = require('./src/config/database');
+const database = require('./src/config/database');
+const sequelize = database.sequelize;
 const YAML = require('yamljs');
 const swaggerUI = require('swagger-ui-express');
 require('dotenv').config();
 
 
 const librarianRoutes = require('./src/routes/librarianRoutes');
+const bookRoutes = require('./src/routes/bookRoutes');
 
 const swaggerDoc = YAML.load('./src/docs/spec.yaml');
 
 const app = express();
 app.use(express.json());
 
-(async function testConnection() {
-    try {
-        await sequelize.authenticate();
-        console.log('Успешно подключено к базе данных.');
-    } catch (err) {
-        console.error('Ошибка подключения:', err.message);
-    }
-})();
-
 //маршруты
 app.use('/', librarianRoutes);
+app.use('/books', bookRoutes);
 
 //Swagger
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
