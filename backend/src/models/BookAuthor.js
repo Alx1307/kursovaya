@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const database = require('../config/database');
 const sequelize = database.sequelize;
 
+// const BookAuthor = sequelize.define('BookAuthor', {}, {
+//     tableName: 'book_author',
+//     timestamps: false
+// });
+
 const BookAuthor = sequelize.define('BookAuthor', {
     book_author_id: {
         type: DataTypes.INTEGER,

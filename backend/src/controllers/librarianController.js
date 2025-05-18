@@ -60,7 +60,7 @@ class LibrarianController {
 
     async getLibrarianData(req, res) {
         try {
-            if (req.params.role !== 'Администратор') {
+            if (req.userData.role !== 'Администратор') {
                 if (req.params.librarian_id != req.userData.id) {
                     return res.status(403).send('Доступ запрещен.');
                 }
