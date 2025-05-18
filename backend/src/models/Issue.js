@@ -56,6 +56,9 @@ const Issue = sequelize.define('Issue', {
         type: DataTypes.TEXT,
         allowNull: true
     }
+}, {
+    tableName: 'issue',
+    timestamps: false
 });
 
 module.exports = Issue;

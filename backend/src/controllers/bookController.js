@@ -1,5 +1,6 @@
 const database = require('../config/database');
 const sequelize = database.sequelize;
+const jwt = require('jsonwebtoken');
 const Book = require('../models/Book');
 
 //Добавление книги
@@ -15,3 +16,25 @@ exports.createBook = async (req, res) => {
         res.status(500).send(err.message);
     }
 };
+
+class BookController {
+    constructor(BookModel) {
+        this.Book = BookModel;
+    }
+
+    //создание книги
+    async createBook(req, res) {
+        try {
+            const data = req.body;
+    
+            const newBook = await Book.create(data);
+    
+            res.status(201).json(newBook).send('Книга успешно добавлена.');
+        } catch(err) {
+            console.error(err.message);
+            res.status(500).send(err.message);
+        }
+    };
+}
+
+module.exports = BookController;

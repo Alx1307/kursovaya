@@ -1,0 +1,32 @@
+html, body{
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #FFFFFF;
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+
+.registration-page {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.left-side {
+    height: 100%;
+    width: 50%;
+    background-color: #618D4A;
+    border-radius: 0 40px 40px 0;
+    transform: translateX(-60px);
+}
+
+.right-side {
+    height: 100%;
+    width: 50%;
+}
