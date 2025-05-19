@@ -105,6 +105,29 @@ class ReaderController {
             return res.status(500).send(err.message);
         }
     }
+
+    async deleteReader(req, res) {
+        try {
+            if (req.userData.role !== 'Библиотекарь') {
+                return res.status(403).send('Доступ запрещен.');
+            }
+
+            const { reader_id } = req.params;
+
+            const reader = await Reader.findByPk(reader_id);
+
+            if (!reader) {
+                return res.status(403).send('Читатель не найден.');
+            }
+
+            await reader.destroy();
+
+            return res.status(200).send('Читатель успешно удален.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
 }
 
 module.exports = ReaderController;

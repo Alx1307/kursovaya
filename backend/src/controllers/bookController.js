@@ -107,7 +107,7 @@ class BookController {
         }
     }
 
-    async getAllBooksData(res) {
+    async getAllBooksData(req, res) {
         try {
             const books = await this.Book.findAll();
 

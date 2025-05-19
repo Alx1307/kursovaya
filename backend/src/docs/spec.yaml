@@ -1090,6 +1090,62 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
 
+  /readers/delete/:reader_id:
+    delete:
+      summary: Удаление читателя по идентификатору
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      parameters:
+        - in: path
+          name: reader_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор читателя
+      responses:
+        '200':
+          description: Читатель успешно удалён
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Читатель успешно удалён.
+        '403':
+          description: Недостаточно прав для удаления читателя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '404':
+          description: Читатель не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Читатель не найден.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:

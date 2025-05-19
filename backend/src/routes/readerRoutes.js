@@ -13,4 +13,6 @@ router.get('/all', authMiddleware, controller.getAllReaders.bind(controller));
 
 router.patch('/edit/:reader_id', authMiddleware, controller.editReader.bind(controller));
 
+router.delete('/delete/:reader_id', authMiddleware, controller.deleteReader.bind(controller));
+
 module.exports = router;
