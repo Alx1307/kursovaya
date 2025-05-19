@@ -95,7 +95,7 @@ class LibrarianController {
             res.json(allLibrarians.map(librarian => librarian.toJSON()));
         } catch (err) {
             console.error(err.message);
-            res.status(500).send('Ошибка сервера.');
+            res.status(500).send(err.message);
         }
     }
 
