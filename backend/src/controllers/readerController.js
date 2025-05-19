@@ -28,6 +28,83 @@ class ReaderController {
             return res.status(500).send(err.message);
         }
     }
+
+    async getReaderData(req, res) {
+        try {
+            const { reader_id } = req.params;
+
+            const reader = await this.Reader.findByPk(reader_id);
+
+            if (!reader) {
+                return res.status(404).send('Читатель не найден.');
+            }
+
+            res.json(reader.toJSON());
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
+
+    async getAllReaders(req, res) {
+        try {
+            const allReaders = await Reader.findAll();
+
+            res.json(allReaders.map(reader => reader.toJSON()));
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send(err.message);
+        }
+    }
+
+    async editReader(req, res) {
+        try {
+            const { reader_id } = req.params;
+
+            if (req.userData.role !== 'Библиотекарь') {
+                return res.status(403).send('Доступ запрещен.');
+            }
+
+            const updatedData = {};
+
+            if (req.body.name) {
+                updatedData.name = req.body.name.trim();
+            }
+
+            if (req.body.card_number) {
+                updatedData.card_number = req.body.card_number.trim();
+            }
+
+            if (req.body.birth_date) {
+                updatedData.birth_date = req.body.birth_date.trim();
+            }
+
+            if (req.body.phone) {
+                updatedData.phone = req.body.phone.trim();
+            }
+
+            if (req.body.hall_id) {
+                updatedData.hall_id = req.body.hall_id;
+            }
+
+            const reader = await Reader.findByPk(reader_id);
+
+            if (!reader) {
+                return res.status(404).send('Читатель не найден.');
+            }
+
+            Object.keys(updatedData).forEach( key => {
+                reader[key] = updatedData[key];
+            });
+
+            await reader.save();
+
+            return res.status(200).send('Данные успешно обновлены.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
 }
 
 module.exports = ReaderController;

@@ -8,4 +8,9 @@ const controller = new ReaderController(Reader);
 
 router.post('/add', authMiddleware, controller.addReader.bind(controller));
 
+router.get('/get/:reader_id', authMiddleware, controller.getReaderData.bind(controller));
+router.get('/all', authMiddleware, controller.getAllReaders.bind(controller));
+
+router.patch('/edit/:reader_id', authMiddleware, controller.editReader.bind(controller));
+
 module.exports = router;

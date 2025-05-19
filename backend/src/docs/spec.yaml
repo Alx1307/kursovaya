@@ -518,7 +518,7 @@ paths:
 
   /books/get/:book_id:
     get:
-      summary: Информация о книге по её идентификатору
+      summary: Информация о книге по идентификатору
       security:
         - bearerAuth: []
       tags:
@@ -887,6 +887,197 @@ paths:
                     type: string
                     description: Описание ошибки
                     example: Доступ запрещен.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
+  /readers/get/:reader_id:
+    get:
+      summary: Получение информации о читателе по идентификатору
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      parameters:
+        - in: path
+          name: reader_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор читателя
+      responses:
+        '200':
+          description: Информация о читателе
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reader_id:
+                    type: integer
+                    description: Уникальный идентификатор читателя
+                  name:
+                    type: string
+                    description: ФИО читателя
+                  card_number:
+                    type: string
+                    description: Номер читательского билета
+                  birth_date:
+                    type: string
+                    format: date
+                    description: Дата рождения читателя
+                  phone:
+                    type: string
+                    description: Телефон читателя
+                  hall_id:
+                    type: integer
+                    description: Номер зала, закреплённый за читателем
+        '404':
+          description: Читатель не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Читатель не найден.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
+  /readers/all:
+    get:
+      summary: Получение списка всех зарегистрированных читателей
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      responses:
+        '200':
+          description: Список всех читателей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    reader_id:
+                      type: integer
+                      description: Уникальный идентификатор читателя
+                    name:
+                      type: string
+                      description: ФИО читателя
+                    card_number:
+                      type: string
+                      description: Номер читательского билета
+                    birth_date:
+                      type: string
+                      format: date
+                      description: Дата рождения читателя
+                    phone:
+                      type: string
+                      description: Телефон читателя
+                    hall_id:
+                      type: integer
+                      description: Номер зала, закреплённый за читателем
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
+  /readers/edit/:reader_id:
+    patch:
+      summary: Редактирование информации о читателе
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      parameters:
+        - in: path
+          name: reader_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор читателя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ФИО читателя
+                card_number:
+                  type: string
+                  description: Номер читательского билета
+                birth_date:
+                  type: string
+                  format: date
+                  description: Дата рождения читателя
+                phone:
+                  type: string
+                  description: Телефон читателя
+                hall_id:
+                  type: integer
+                  description: Номер зала, закреплённый за читателем
+      responses:
+        '200':
+          description: Данные успешно обновлены
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Данные успешно обновлены.
+        '403':
+          description: Недостаточно прав для редактирования
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '404':
+          description: Читатель не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Читатель не найден.
         '500':
           description: Внутренняя ошибка сервера
           content:

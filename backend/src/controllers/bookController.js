@@ -76,7 +76,7 @@ class BookController {
             const book = await this.Book.findByPk(book_id);
 
             if (!book) {
-                return res.status.send('Книга не найдена.');
+                return res.status(404).send('Книга не найдена.');
             }
 
             const bookAuthorRecords = await this.BookAuthor.findAll({
