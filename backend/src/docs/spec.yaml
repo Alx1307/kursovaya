@@ -664,6 +664,105 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
+  /books/edit/:book_id:
+    patch:
+      summary: Редактирование информации о книге
+      security:
+        - bearerAuth: []
+      tags:
+        - Книги
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор книги
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Новое название книги
+                  minLength: 1
+                publish_year:
+                  type: integer
+                  minimum: 1500
+                  maximum: 2025
+                  description: Новый год выпуска книги
+                isbn:
+                  type: string
+                  pattern: "^\\d{3}-\\d-\\d{9}-\\d$|^\\d{9}(\\d|X)$"
+                  description: Новый международный стандартный номер книги (ISBN)
+                code:
+                  type: string
+                  description: Новый шифр книги
+                quantity:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  description: Новое количество экземпляров книги
+                authors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      surname:
+                        type: string
+                        description: Фамилия автора
+                      name:
+                        type: string
+                        description: Имя автора
+                      patronymic:
+                        type: string
+                        nullable: true
+                        description: Отчество автора
+      responses:
+        '200':
+          description: Книга успешно обновлена
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Книга успешно обновлена.
+        '403':
+          description: Недостаточно прав для редактирования книги
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '404':
+          description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Книга не найдена.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:
