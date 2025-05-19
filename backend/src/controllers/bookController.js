@@ -1,10 +1,8 @@
 const database = require('../config/database');
 const sequelize = database.sequelize;
-const jwt = require('jsonwebtoken');
 const Book = require('../models/Book');
 const Author = require('../models/Author');
 const BookAuthor = require('../models/BookAuthor');
-const { json } = require('sequelize');
 
 class BookController {
     constructor(BookModel, AuthorModel, BookAuthorModel) {

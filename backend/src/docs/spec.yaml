@@ -825,6 +825,80 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
 
+  /readers/add:
+    post:
+      summary: Регистрация нового читателя
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ФИО читателя
+                  minLength: 1
+                card_number:
+                  type: string
+                  description: Номер читательского билета
+                  minLength: 1
+                birth_date:
+                  type: string
+                  format: date
+                  description: Дата рождения читателя
+                phone:
+                  type: string
+                  description: Телефон читателя
+                hall_id:
+                  type: integer
+                  description: Номер зала, закреплённый за читателем
+      responses:
+        '201':
+          description: Читатель успешно зарегистрирован
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Читатель успешно зарегистрирован.
+        '400':
+          description: Некорректные входные данные
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: ФИО читателя обязательно.
+        '403':
+          description: Недостаточно прав для регистрации читателя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:

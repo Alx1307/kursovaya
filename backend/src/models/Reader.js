@@ -32,13 +32,13 @@ const Reader = sequelize.define('Reader', {
     phone: {
         type: DataTypes.STRING(16),
         allowNull: true,
-        validate: {
-            correct_phone(value) {
-                if (!value.match(/^\+7 9[0-9]{2} [0-9]{3}-[0-9]{2}-[0-9]{2}$/)) {
-                    throw new Error('Некорректный номер телефона.');
-                }
-            }
-        },
+        // validate: {
+        //     correct_phone(value) {
+        //         if (!value.match(/^\+7 9[0-9]{2} [0-9]{3}-[0-9]{2}-[0-9]{2}$/)) {
+        //             throw new Error('Некорректный номер телефона.');
+        //         }
+        //     }
+        // },
         unique: {
             args: true,
             msg: 'Читатель с таким номером телефона уже зарегистрирован.'
