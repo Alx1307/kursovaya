@@ -82,6 +82,23 @@ class LibrarianController {
         }
     }
 
+    async getAllLibrariansData(req, res) {
+        try {
+            if (req.userData.role !== 'Администратор') {
+                return res.status(403).send('Доступ запрещен.');
+            }
+    
+            const allLibrarians = await Librarian.findAll({
+                attributes: ['librarian_id', 'full_name', 'email', 'role']
+            });
+    
+            res.json(allLibrarians.map(librarian => librarian.toJSON()));
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Ошибка сервера.');
+        }
+    }
+
     async deleteLibrarian(req, res) {
         const { librarian_id } = req.params;
 

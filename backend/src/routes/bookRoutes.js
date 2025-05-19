@@ -10,4 +10,9 @@ const controller = new BookController(Book, Author, BookAuthor);
 
 router.post('/create', authMiddleware, controller.createBook.bind(controller));
 
+router.get('/all', authMiddleware, controller.getAllBooksData.bind(controller));
+router.get('/get/:book_id', authMiddleware, controller.getBookData.bind(controller));
+
+router.patch('/edit/:book_id', authMiddleware, controller.editBook.bind(controller));
+
 module.exports = router;

@@ -10,9 +10,10 @@ router.post('/register', controller.registerLibrarian.bind(controller));
 router.post('/login', controller.loginLibrarian.bind(controller));
 
 router.get('/librarian/:librarian_id', authMiddleware, controller.getLibrarianData.bind(controller));
+router.get('/librarian/all', authMiddleware, controller.getAllLibrariansData.bind(controller));
 
-router.delete('/delete-account/:librarian_id', authMiddleware, controller.deleteLibrarian.bind(controller));
+router.delete('/librarian/delete/:librarian_id', authMiddleware, controller.deleteLibrarian.bind(controller));
 
-router.patch('/edit-librarian/:librarian_id', authMiddleware, controller.editLibrarianData.bind(controller));
+router.patch('/librarian/edit/:librarian_id', authMiddleware, controller.editLibrarianData.bind(controller));
 
 module.exports = router;

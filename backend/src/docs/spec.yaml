@@ -9,9 +9,11 @@ tags:
   - name: Регистрация
     description: Методы для регистрации пользователей
   - name: Авторизация
-    description: Методы для входа и выхода пользователей
+    description: Методы для входа пользователей
   - name: Профиль
     description: Управление профилем библиотекарей
+  - name: Книги
+    description: Управление книгами из библиотечного фонда
 
 paths:
   /register:
@@ -208,7 +210,60 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
-  /delete-account/:librarian_id:
+  /librarian/all:
+    get:
+      summary: Профили всех библиотекарей
+      security:
+        - bearerAuth: []
+      tags:
+        - Профиль
+      responses:
+        '200':
+          description: Список всех библиотекарей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    librarian_id:
+                      type: integer
+                      description: Уникальный идентификатор библиотекаря
+                    full_name:
+                      type: string
+                      description: Полное имя библиотекаря
+                    email:
+                      type: string
+                      format: email
+                      description: Электронный адрес библиотекаря
+                    role:
+                      type: string
+                      description: Роль библиотекаря
+        '403':
+          description: Недоступно для текущих полномочий
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера
+
+  /librarian/delete/:librarian_id:
     delete:
       summary: Удаление профиля библиотекаря
       security:
@@ -268,7 +323,7 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
-  /edit-librarian/:librarian_id:
+  /librarian/edit/:librarian_id:
     patch:
       summary: Редактирование профиля библиотекаря
       security:
@@ -347,6 +402,256 @@ paths:
                     type: string
                     description: Ошибка отсутствия данных
                     example: Библиотекарь не найден
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера
+
+  /books/create:
+    post:
+      summary: Добавление новой книги
+      security:
+        - bearerAuth: []
+      tags:
+          - Книги
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Название книги
+                  minLength: 1
+                publish_year:
+                  type: integer
+                  minimum: 1500
+                  maximum: 2025
+                  description: Год выпуска книги
+                isbn:
+                  type: string
+                  pattern: "^\\d{3}-\\d-\\d{9}-\\d$|^\\d{9}(\\d|X)$"
+                  description: Международный стандартный номер книги (ISBN)
+                code:
+                  type: string
+                  description: Шифр книги
+                date_added:
+                  type: string
+                  format: date-time
+                  description: Дата добавления книги
+                quantity:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  description: Количество копий книги
+                authors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      surname:
+                        type: string
+                        description: Фамилия автора
+                      name:
+                        type: string
+                        description: Имя автора
+                      patronymic:
+                        type: string
+                        nullable: true
+                        description: Отчество автора
+      responses:
+        '201':
+          description: Книга успешно добавлена
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Книга успешно добавлена.
+        '400':
+          description: Некорректные входные данные
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Название книги обязательно.
+        '403':
+          description: Недостаточно прав для добавления книги
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
+  /books/get/:book_id:
+    get:
+      summary: Информация о книге по её идентификатору
+      security:
+        - bearerAuth: []
+      tags:
+        - Книги
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор книги
+      responses:
+        '200':
+          description: Информация о книге
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  book_id:
+                    type: integer
+                    description: Уникальный идентификатор книги
+                  title:
+                    type: string
+                    description: Название книги
+                  publish_year:
+                    type: integer
+                    description: Год издания книги
+                  isbn:
+                    type: string
+                    description: Международный стандартный номер книги (ISBN)
+                  code:
+                    type: string
+                    description: Каталогизационный шифр книги
+                  date_added:
+                    type: string
+                    format: date-time
+                    description: Дата добавления книги в базу данных
+                  quantity:
+                    type: integer
+                    description: Количество экземпляров книги
+                  Authors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        author_id:
+                          type: integer
+                          description: Уникальный идентификатор автора
+                        surname:
+                          type: string
+                          description: Фамилия автора
+                        name:
+                          type: string
+                          description: Имя автора
+                        patronymic:
+                          type: string
+                          nullable: true
+                          description: Отчество автора
+        '404':
+          description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Книга не найдена
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера
+
+  /books/all:
+    get:
+      summary: Список всех книг
+      security:
+        - bearerAuth: []
+      tags:
+        - Книги
+      responses:
+        '200':
+          description: Список всех книг
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    book_id:
+                      type: integer
+                      description: Уникальный идентификатор книги
+                    title:
+                      type: string
+                      description: Название книги
+                    publish_year:
+                      type: integer
+                      description: Год издания книги
+                    isbn:
+                      type: string
+                      description: Международный стандартный номер книги (ISBN)
+                    code:
+                      type: string
+                      description: Каталогизационный шифр книги
+                    date_added:
+                      type: string
+                      format: date-time
+                      description: Дата добавления книги в базу данных
+                    quantity:
+                      type: integer
+                      description: Количество экземпляров книги
+                    Authors:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          author_id:
+                            type: integer
+                            description: Уникальный идентификатор автора
+                          surname:
+                            type: string
+                            description: Фамилия автора
+                          name:
+                            type: string
+                            description: Имя автора
+                          patronymic:
+                            type: string
+                            nullable: true
+                            description: Отчество автора
         '500':
           description: Внутренняя ошибка сервера
           content:
