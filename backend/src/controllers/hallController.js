@@ -23,6 +23,17 @@ class HallController {
             return res.status(500).send(err.message);
         }
     }
+
+    async getAllHallsData(req, res) {
+        try {
+            const allHalls = await Hall.findAll();
+
+            res.status(200).json(allHalls.map(hall => hall.toJSON()));
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
 }
 
 module.exports = HallController;

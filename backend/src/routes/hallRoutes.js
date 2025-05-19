@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const controller = new HallController(Hall);
 
+router.get('/all', authMiddleware, controller.getAllHallsData.bind(controller));
 router.get('/get/:hall_id', authMiddleware, controller.getHallData.bind(controller));
 
 module.exports = router;

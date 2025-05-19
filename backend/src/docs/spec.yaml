@@ -1206,6 +1206,50 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
 
+  /halls/all:
+    get:
+      summary: Получение списка всех залов
+      security:
+        - bearerAuth: []
+      tags:
+        - Залы
+      responses:
+        '200':
+          description: Список всех залов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hall_id:
+                      type: integer
+                      description: Уникальный идентификатор зала
+                    number:
+                      type: integer
+                      description: Номер зала
+                    floor:
+                      type: integer
+                      description: Этаж, на котором расположен зал
+                    capacity:
+                      type: integer
+                      description: Максимальная вместимость зала
+                    description:
+                      type: string
+                      description: Описание зала
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:
