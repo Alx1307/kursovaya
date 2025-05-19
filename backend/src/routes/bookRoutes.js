@@ -15,4 +15,6 @@ router.get('/get/:book_id', authMiddleware, controller.getBookData.bind(controll
 
 router.patch('/edit/:book_id', authMiddleware, controller.editBook.bind(controller));
 
+router.delete('/delete/:book_id', authMiddleware, controller.deleteBook.bind(controller));
+
 module.exports = router;

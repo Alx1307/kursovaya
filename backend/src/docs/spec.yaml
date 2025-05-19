@@ -7,13 +7,19 @@ servers:
   - url: http://localhost:8080/
 tags:
   - name: Регистрация
-    description: Методы для регистрации пользователей
+    description: Методы для регистрации сотрудников
   - name: Авторизация
-    description: Методы для входа пользователей
+    description: Методы для входа сотрудников
   - name: Профиль
-    description: Управление профилем библиотекарей
+    description: Управление профилем сотрудника
   - name: Книги
     description: Управление книгами из библиотечного фонда
+  - name: Читатели
+    description: Управление читателями библиотеки
+  - name: Залы
+    description: Управление залами билиотеки
+  - name: Выдачи
+    description: Управление вадачами книг читателям билиотеки
 
 paths:
   /register:
@@ -731,6 +737,62 @@ paths:
                 example: Книга успешно обновлена.
         '403':
           description: Недостаточно прав для редактирования книги
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещен.
+        '404':
+          description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Книга не найдена.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
+  /books/delete/:book_id:
+    delete:
+      summary: Удаление книги по идентификатору
+      security:
+        - bearerAuth: []
+      tags:
+        - Книги
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор книги
+      responses:
+        '200':
+          description: Книга успешно удалена
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Книга успешно удалена.
+        '403':
+          description: Недостаточно прав для удаления книги
           content:
             application/json:
               schema:

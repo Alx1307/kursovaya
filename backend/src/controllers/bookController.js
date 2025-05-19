@@ -201,6 +201,31 @@ class BookController {
             res.status(500).send(err.message);
         }
     }
+
+    async deleteBook(req, res) {
+        try {
+            if (req.userData.role !== 'Библиограф') {
+                return res.status(403).send('Доступ запрещен.');
+            }
+
+            const { book_id } = req.params;
+
+            const book = await this.Book.findByPk(book_id);
+
+            if (!book) {
+                return res.status(404).send('Книга не найдена.');
+            }
+
+            await this.BookAuthor.destroy({ where: { book_id: book_id } });
+
+            await book.destroy();
+
+            return res.status(200).send('Книга успешно удалена.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
 }
 
 module.exports = BookController;
