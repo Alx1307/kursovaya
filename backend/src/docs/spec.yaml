@@ -1332,6 +1332,73 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
 
+  /issues/get/:issue_id:
+    get:
+      summary: Получение информации о выдаче книги по идентификатору
+      security:
+        - bearerAuth: []
+      tags:
+        - Выдачи
+      parameters:
+        - in: path
+          name: issue_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Уникальный идентификатор выдачи
+      responses:
+        '200':
+          description: Информация о выданной книге успешно получена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issue_id:
+                    type: integer
+                    description: Идентификатор выдачи
+                  book_id:
+                    type: integer
+                    description: Идентификатор книги
+                  reader_id:
+                    type: integer
+                    description: Идентификатор читателя
+                  BookCode:
+                    type: string
+                    description: Код книги
+                  ReaderCardNumber:
+                    type: string
+                    description: Номер читательского билета
+        '400':
+          description: Некорректный идентификатор выдачи
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Некорректный id.
+        '403':
+          description: Пользователь не обладает правами библиотекаря
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Доступ запрещён.
+        '404':
+          description: Нет такой выдачи
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Нет такой выдачи.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:
