@@ -1249,6 +1249,88 @@ paths:
                     type: string
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
+                    
+  /issues/add:
+    post:
+      summary: Выдача книги читателю
+      security:
+        - bearerAuth: []
+      tags:
+        - Выдачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                  description: Идентификатор книги
+                  minimum: 1
+                reader_id:
+                  type: integer
+                  description: Идентификатор читателя
+                  minimum: 1
+                return_date:
+                  type: string
+                  format: date
+                  description: Срок возврата книги
+                comment:
+                  type: string
+                  description: Комментарий к выдаче (опционально)
+      responses:
+        '201':
+          description: Книга успешно выдана
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Книга успешно выдана.
+        '400':
+          description: Некорректные входные данные
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Необходимо заполнить поля: Id книги, Id читателя и срок возврата.
+        '403':
+          description: Недостаточно прав для операции
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Доступ запрещён.
+        '404':
+          description: Не найдены книга или читатель
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Описание ошибки
+                    example: Книги или читателя с указанным идентификатором не существует.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
 
 components:
   securitySchemes:
