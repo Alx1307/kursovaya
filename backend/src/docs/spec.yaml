@@ -1448,6 +1448,81 @@ paths:
                 type: string
                 example: Произошла внутренняя ошибка сервера.
 
+  /issues/edit/:issue_id:
+    patch:
+      summary: Редактирование данных о выдаче книги
+      security:
+        - bearerAuth: []
+      tags:
+        - Выдачи
+      parameters:
+        - in: path
+          name: issue_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Идентификатор выдачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                  description: Новый идентификатор книги (опционально)
+                reader_id:
+                  type: integer
+                  description: Новый идентификатор читателя (опционально)
+                return_date:
+                  type: string
+                  format: date
+                  description: Новая дата возврата (опционально)
+                status:
+                  type: string
+                  description: Новый статус выдачи (опционально)
+                comment:
+                  type: string
+                  description: Новый комментарий (опционально)
+      responses:
+        '200':
+          description: Выдача успешно обновлена
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Выдача успешно обновлена.
+        '400':
+          description: Некорректный идентификатор выдачи
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Некорректный идентификатор выдачи.
+        '403':
+          description: Недостаточный уровень доступа
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Доступ запрещён.
+        '404':
+          description: Записи о выдаче не существует или новая книга/читатель не найдены
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Выдача не найдена.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:

@@ -128,6 +128,48 @@ class IssueController {
             return res.status(500).send(err.message);
         }
     }
+
+    async editIssue(req, res) {
+        try {
+            if (req.userData.role !== 'Библиотекарь') {
+                return res.status(403).send('Доступ запрещён.');
+            }
+    
+            const { issue_id } = req.params;
+            const { book_id, reader_id, return_date, status, comment } = req.body;
+    
+            if (!issue_id) {
+                return res.status(400).send('Некорректный идентификатор выдачи.');
+            }
+    
+            const existingIssue = await this.Issue.findByPk(issue_id);
+    
+            if (!existingIssue) {
+                return res.status(404).send('Выдача не найдена.');
+            }
+    
+            if (book_id && !(await Book.findByPk(book_id))) {
+                return res.status(404).send('Указанная книга не найдена.');
+            }
+    
+            if (reader_id && !(await Reader.findByPk(reader_id))) {
+                return res.status(404).send('Указанный читатель не найден.');
+            }
+    
+            await existingIssue.update({
+                book_id: book_id || existingIssue.book_id,
+                reader_id: reader_id || existingIssue.reader_id,
+                return_date: return_date || existingIssue.return_date,
+                status: status || existingIssue.status,
+                comment: comment || existingIssue.comment
+            });
+    
+            return res.status(200).send('Выдача успешно обновлена.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
 }
 
 module.exports = IssueController;
