@@ -4,6 +4,7 @@ const sequelize = database.sequelize;
 const YAML = require('yamljs');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDoc = YAML.load('./src/docs/spec.yaml');
+const cors = require('cors');
 require('dotenv').config();
 
 const librarianRoutes = require('./src/routes/librarianRoutes');
@@ -14,6 +15,10 @@ const issueRoutes = require('./src/routes/issueRoutes');
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+    origin: 'http://localhost:5173'
+}));
 
 //маршруты
 app.use('/', librarianRoutes);

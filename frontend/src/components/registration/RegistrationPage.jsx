@@ -1,17 +1,17 @@
 import React from 'react';
-//import EnterButton from './EnterButton';
-//import RegistrationForm from './RegistrationForm';
+import EnterButton from './enter/EnterButton';
+import RegistrationForm from './registrationForm/RegistrationForm';
 import './RegistrationPage.css';
 
 const RegistrationPage = () => {
     return (
         <div className='registration-page'>
             <div className='left-side'>
-                здесь будет вход
+                <EnterButton/>
             </div>
 
             <div className='right-side'>
-                для регистрации
+                <RegistrationForm/>
             </div>
         </div>
     );

@@ -1,0 +1,60 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+}
+
+.libramanager {
+    color: white;
+    font-size: 44px;
+    font-weight: normal;
+    line-height: 1em;
+}
+
+.library-text {
+    color: white;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.enter-block {
+    margin-top: 77px;
+    text-align: center;
+}
+
+.enter-text {
+    font-size: 20px;
+    color: #fff;
+    font-weight: medium;
+}
+
+.login-button {
+    display: block;
+    width: 250px;
+    height: 50px;
+    border-radius: 15px;
+    background-color: #618D4A;
+    border: solid 2px white;
+    margin-top: 20px;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+}
+
+.login-button:hover {
+    background-color: #4B7C3F;
+    border-color: white;
+}
+
+.login-button:focus {
+    outline: none; 
+}

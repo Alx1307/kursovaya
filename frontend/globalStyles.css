@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'MyFont';
+    src: local('MyFont'), url('./src/assets/fonts/Montserrat-Black.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 400;
+}
+
+body {
+    font-family: 'MyFont', sans-serif;
+}
