@@ -54,11 +54,7 @@ class IssueController {
     }
 
     async getIssueData(req, res) {
-        try {
-            if (req.userData.role !== 'Библиотекарь') {
-                return res.status(403).send('Доступ запрещён.');
-            }
-    
+        try {    
             const { issue_id } = req.params;
     
             if (!issue_id) {
@@ -83,11 +79,50 @@ class IssueController {
     
             const issueData = {
                 ...issue.toJSON(),
-                BookCode: book.code,
-                ReaderCardNumber: reader.card_number
+                book_code: book.code,
+                reader_card_number: reader.card_number
             };
     
             return res.status(200).json(issueData);
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
+
+    async getAllIssuesData(req, res) {
+        try {
+            const issues = await this.Issue.findAll({
+                attributes: ['issue_id', 'book_id', 'reader_id']
+            });
+    
+            if (!issues.length) {
+                return res.status(200).json([]);
+            }
+    
+            let results = [];
+    
+            for (let i = 0; i < issues.length; i++) {
+                const issue = issues[i];
+    
+                const book = await this.Book.findByPk(issue.book_id, {
+                    attributes: ['code']
+                });
+    
+                const reader = await this.Reader.findByPk(issue.reader_id, {
+                    attributes: ['card_number']
+                });
+    
+                const issueData = {
+                    ...issue.toJSON(),
+                    book_code: book ? book.code : null,
+                    reader_card_number: reader ? reader.card_number : null
+                };
+    
+                results.push(issueData);
+            }
+    
+            return res.status(200).json(results);
         } catch (err) {
             console.error(err.message);
             return res.status(500).send(err.message);

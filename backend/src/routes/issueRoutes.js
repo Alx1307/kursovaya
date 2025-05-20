@@ -10,6 +10,7 @@ const controller = new IssueController(Issue, Book, Reader);
 
 router.post('/add', authMiddleware, controller.addIssue.bind(controller));
 
+router.get('/all', authMiddleware, controller.getAllIssuesData.bind(controller));
 router.get('/get/:issue_id', authMiddleware, controller.getIssueData.bind(controller));
 
 module.exports = router;

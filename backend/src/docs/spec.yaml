@@ -1399,6 +1399,55 @@ paths:
                 type: string
                 example: Произошла внутренняя ошибка сервера.
 
+  /issues/all:
+    get:
+      summary: Получение списка всех выданных книг
+      security:
+        - bearerAuth: []
+      tags:
+        - Выдачи
+      responses:
+        '200':
+          description: Список всех выдач книг
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    issue_id:
+                      type: integer
+                      description: Идентификатор выдачи
+                    book_id:
+                      type: integer
+                      description: Идентификатор книги
+                    reader_id:
+                      type: integer
+                      description: Идентификатор читателя
+                    book_code:
+                      type: string
+                      nullable: true
+                      description: Код книги (может быть null, если книга не найдена)
+                    reader_card_number:
+                      type: string
+                      nullable: true
+                      description: Номер читательского билета (может быть null, если читатель не найден)
+        '403':
+          description: Доступ запрещён (недостаточные права)
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Доступ запрещён.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Произошла внутренняя ошибка сервера.
+
 components:
   securitySchemes:
     bearerAuth:
