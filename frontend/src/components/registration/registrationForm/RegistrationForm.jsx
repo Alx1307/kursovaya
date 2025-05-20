@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegistrationForm.css';
 import logoImage from '../../../assets/red_book_comp.png';
 
 const RegistrationForm = () => {
+    const navigate = useNavigate();
+
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,11 +22,10 @@ const RegistrationForm = () => {
             role: selectedRole
         };
 
-        console.log('Отправляю данные:', userData);
-
         try {
             const response = await axios.post('http://localhost:8080/register', userData);
             alert(response.data);
+            navigate('/auth');
         } catch (error) {
             alert(error.response ? error.response.data : 'Ошибка подключения к серверу');
         }
