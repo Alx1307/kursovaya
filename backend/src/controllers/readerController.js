@@ -1,6 +1,7 @@
 const database = require('../config/database');
 const sequelize = database.sequelize;
 const Reader = require('../models/Reader');
+const Hall = require('../models/Hall');
 
 class ReaderController {
     constructor(ReaderModel) {
@@ -18,6 +19,22 @@ class ReaderController {
             if (!name) return res.status(400).send('ФИО читателя обязательно.');
             if (!card_number) return res.status(400).send('Номер читательского билета обязательно.');
             if (!hall_id) return res.status(400).send('Номер зала обязателен.');
+
+            const hall = await Hall.findByPk(hall_id, {
+                attributes: ['seats_quantity']
+            });
+
+            if (!hall) {
+                return res.status(404).send('Зал не найден.');
+            }
+
+            const readersInHall = await Reader.count({
+                where: { hall_id }
+            });
+
+            if (readersInHall >= hall.seats_quantity) {
+                return res.status(400).send('В выбранном зале нет свободных мест.');
+            }
 
             const reader = new Reader({ name, card_number, birth_date, phone, hall_id });
             await reader.save();

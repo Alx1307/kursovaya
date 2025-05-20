@@ -1,3 +1,6 @@
+const Sequelize = require('sequelize');
+const { Op } = Sequelize;
+
 const database = require('../config/database');
 const sequelize = database.sequelize;
 const Issue = require('../models/Issue');
@@ -26,12 +29,27 @@ class IssueController {
                 });
             }
             
-            const book = await Book.findByPk(book_id);
+            const book = await Book.findByPk(book_id, {
+                attributes: ['quantity']
+            });
+
             if (!book) {
                 return res.status(404).send('Книга не найдена.');
             }
 
+            const issuedCount = await this.Issue.count({
+                where:{
+                    book_id,
+                    status:  { [Op.or]: ['Выдана', 'Просрочена'] }  
+                }
+            });
+
+            if ((book.quantity - issuedCount) <= 0) {
+                return res.status(400).send('Все доступные экземпляры книги уже выданы.');
+            }
+
             const reader = await Reader.findByPk(reader_id);
+
             if (!reader) {
                 return res.status(404).send('Читатель не найден.');
             }
