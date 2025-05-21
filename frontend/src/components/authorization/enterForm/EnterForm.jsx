@@ -1,0 +1,58 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './EnterForm.css';
+import logoImage from '../../../assets/red_book_comp.png';
+
+const EnterForm = () => {
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const userData = {
+            email: email,
+            password: password
+        };
+
+        try {
+            const response = await axios.post('http://localhost:8080/login', userData);
+            alert(response.data);
+            navigate('/');
+        } catch (error) {
+            alert(error.response ? error.response.data : 'Ошибка подключения к серверу');
+        }
+    };
+
+    return (
+        <div className="authorization-form-container">
+            <img src={logoImage} alt="Logo" className="logo"/>
+            <h1 className="title">Вход в аккаунт</h1>
+            <p className="subtitle">Введите ваши данные для входа в аккаунт</p>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="form-input"
+                />
+                <input
+                    type="password"
+                    placeholder="Пароль"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="form-input"
+                />
+                <button type="submit" className="submit-btn">Войти</button>
+            </form>
+        </div>
+    );
+};
+
+export default EnterForm;

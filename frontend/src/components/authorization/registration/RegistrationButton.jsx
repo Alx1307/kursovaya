@@ -1,15 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EnterButton.css';
+import './RegistrationButton.css';
 import logoImage from '../../../assets/white_book_comp.png';
 
-const EnterButton = () => {
+const RegistrationButton = () => {
     const navigate = useNavigate();
 
-    const handleLoginClick = () => {
-        navigate('/auth');
+    const handleRegisterClick = () => {
+        navigate('/');
     };
-
     return (
         <div className="container">
             <img src={logoImage} alt="Logo" className="logo"/>
@@ -18,13 +17,13 @@ const EnterButton = () => {
 
             <span className="library-text">БИБЛИОТЕКА</span>
 
-            <div className="enter-block">
-                <p className="enter-text">Есть аккаунт? Войдите</p>
+            <div className="registration-block">
+                <p className="registration-text">Нет аккаунта? Зарегистрируйтесь</p>
                 
-                <button className="login-button" onClick={handleLoginClick}>Вход</button>
+                <button className="register-button" onClick={handleRegisterClick}>Регистрация</button>
             </div>
         </div>
     );
 };
 
-export default EnterButton;
+export default RegistrationButton;

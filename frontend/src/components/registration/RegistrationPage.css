@@ -20,7 +20,7 @@ html, body{
 
 .left-side {
     height: 100%;
-    width: 50%;
+    width: 45%;
     background-color: #618D4A;
     border-radius: 0 40px 40px 0;
     transform: translateX(-60px);

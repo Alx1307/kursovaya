@@ -1,0 +1,116 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+
+.libramanager {
+    color: white;
+    font-size: 44px;
+    font-weight: normal;
+    line-height: 1em;
+    margin-bottom: 10px;
+}
+
+.library-text {
+    color: white;
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+.registration-block {
+    text-align: center;
+}
+
+.registration-text {
+    font-size: 20px;
+    color: #fff;
+    font-weight: medium;
+    margin-bottom: 10px;
+}
+
+.register-button {
+    display: inline-block;
+    width: 250px;
+    height: 50px;
+    border-radius: 15px;
+    background-color: #618D4A;
+    border: solid 2px white;
+    margin-top: 20px;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.register-button:hover {
+    background-color: #4B7C3F;
+    border-color: white;
+}
+
+.register-button:focus {
+    outline: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .logo {
+        width: 80px;
+    }
+    
+    .libramanager {
+        font-size: 30px;
+    }
+    
+    .library-text {
+        font-size: 16px;
+    }
+    
+    .registration-text {
+        font-size: 16px;
+    }
+    
+    .register-button {
+        width: 100%;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .logo {
+        width: 100px;
+    }
+    
+    .libramanager {
+        font-size: 36px;
+    }
+    
+    .library-text {
+        font-size: 18px; 
+    }
+    
+    .registration-text {
+        font-size: 18px;
+    }
+    
+    .register-button {
+        width: 200px;
+        height: 45px;
+        font-size: 18px;
+    }
+}

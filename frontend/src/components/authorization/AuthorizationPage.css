@@ -1,0 +1,32 @@
+html, body{
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #FFFFFF;
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+
+.authorization-page {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.right-auth-side {
+    height: 100%;
+    width: 45%;
+    background-color: #618D4A;
+    border-radius: 40px 0 0 40px;
+}
+
+.left-auth-side {
+    height: 100%;
+    width: 50%;
+    background-color: white;
+}
