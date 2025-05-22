@@ -16,7 +16,7 @@ const menuItems = [
     { icon: MeetingRoomIcon, title: 'Залы', link: '/halls' },
 ];
 
-const Sidebar = () => {
+const Sidebar = () => { 
     return (
         <div className="sidebar">
             <div className="logo-section">
@@ -29,7 +29,7 @@ const Sidebar = () => {
             <ul className="menu-items">
                 {menuItems.map(({ icon: Icon, title, link }, index) => (
                     <li key={index} className="menu-item">
-                        <NavLink to={link} className="nav-link" activeClassName="active">
+                        <NavLink to={link} className="nav-link" activeclassname="active">
                             <Icon fontSize="medium" />
                             {title}
                         </NavLink>

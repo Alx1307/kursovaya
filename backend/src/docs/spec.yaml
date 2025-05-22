@@ -269,6 +269,70 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера
 
+  /librarian/data:
+    get:
+      summary: Получить данные текущего библиотекаря по токену
+      security:
+        - bearerAuth: []
+      tags:
+        - Профиль
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Успешный ответ с информацией о библиотекаре
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  librarian_id:
+                    type: integer
+                    description: Идентификатор библиотекаря
+                  full_name:
+                    type: string
+                    description: Полное имя библиотекаря
+                  email:
+                    type: string
+                    format: email
+                    description: Email библиотекаря
+                  role:
+                    type: string
+                    description: Роль библиотекаря
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Текст ошибки
+                    example: Вы не авторизированы
+        '404':
+          description: Библиотекарь не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Текст ошибки
+                    example: Библиотекарь не найден
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Текст ошибки
+                    example: Внутренняя ошибка сервера
+
   /librarian/delete/:librarian_id:
     delete:
       summary: Удаление профиля библиотекаря

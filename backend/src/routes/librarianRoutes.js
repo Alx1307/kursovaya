@@ -11,6 +11,7 @@ router.post('/login', controller.loginLibrarian.bind(controller));
 
 router.get('/librarian/get/:librarian_id', authMiddleware, controller.getLibrarianData.bind(controller));
 router.get('/librarian/all', authMiddleware, controller.getAllLibrariansData.bind(controller));
+router.get('/librarian/data', authMiddleware, controller.getLibrarianTokenData.bind(controller));
 
 router.delete('/librarian/delete/:librarian_id', authMiddleware, controller.deleteLibrarian.bind(controller));
 

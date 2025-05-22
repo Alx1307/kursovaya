@@ -82,6 +82,26 @@ class LibrarianController {
         }
     }
 
+    async getLibrarianTokenData(req, res) {
+        try {
+            const userId = req.userData.id;
+            
+            const librarian = await Librarian.findOne({
+                where: { librarian_id: userId },
+                attributes: ['librarian_id', 'full_name', 'email', 'role']
+            });
+    
+            if (!librarian) {
+                return res.status(404).json({ message: 'Пользователь не найден.' });
+            }
+    
+            res.json(librarian.toJSON());
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send(err.message);
+        }
+    }
+
     async getAllLibrariansData(req, res) {
         try {
             if (req.userData.role !== 'Администратор') {

@@ -8,6 +8,7 @@ import IssuePage from './components/pages/IssuePage';
 import BooksPage from './components/pages/BooksPage';
 import ReadersPage from './components/pages/ReadersPage';
 import HallsPage from './components/pages/HallsPage';
+import PrivateRoute from './routes/PrivateRoutes';
 
 function App() {
   return (
@@ -15,11 +16,32 @@ function App() {
       <Routes>
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/auth" element={<AuthorizationPage />} />
-        <Route path='/main' element={<MainPage />} />
-        <Route path='/issues' element={<IssuePage />} />
-        <Route path='/books' element={<BooksPage />} />
-        <Route path='/readers' element={<ReadersPage />} />
-        <Route path='/halls' element={<HallsPage />} />
+
+        <Route path="/main" element={
+          <PrivateRoute>
+            <MainPage />
+          </PrivateRoute>
+        } />
+        <Route path="/issues" element={
+          <PrivateRoute>
+            <IssuePage />
+          </PrivateRoute>
+        } />
+        <Route path="/books" element={
+          <PrivateRoute>
+            <BooksPage />
+          </PrivateRoute>
+        } />
+        <Route path="/readers" element={
+          <PrivateRoute>
+            <ReadersPage />
+          </PrivateRoute>
+        } />
+        <Route path="/halls" element={
+          <PrivateRoute>
+            <HallsPage />
+          </PrivateRoute>
+        } />
       </Routes>
     </Router>
   );
