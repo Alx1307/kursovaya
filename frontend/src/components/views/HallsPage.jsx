@@ -1,4 +1,3 @@
-// HallsPage.js
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
