@@ -3,6 +3,7 @@ import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
 import TableComponent from '../table/Table';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import EditIcon from '@mui/icons-material/Edit';
 import './Pages.css';
 
 const IssuePage = () => {
@@ -29,6 +30,8 @@ const IssuePage = () => {
           id: item.issue_id,
         }));
 
+        console.log(transformedData);
+
         setIssueData(transformedData);
       } catch (err) {
         console.error('Ошибка загрузки выданных книг:', err);
@@ -39,14 +42,43 @@ const IssuePage = () => {
   }, []); 
 
   const issueColumns = [
-    { field: 'id', headerName: 'ID', flex: 0.1 },
-    { field: 'book_code', headerName: 'Шифр книги', flex: 0.3 },
-    { field: 'reader_card_number', headerName: 'Номер читательского билета', flex: 0.3 },
+    { field: 'id', headerName: 'ID', flex: 0.05 },
+    { field: 'book_code', headerName: 'Шифр книги', flex: 0.1 },
+    { field: 'reader_card_number', headerName: 'Номер читательского билета', flex: 0.2 },
+    { field: 'issue_date', headerName: 'Дата выдачи', flex: 0.15 },
+    {
+        field: 'return_date',
+        headerName: 'Дата возврата',
+        flex: 0.15,
+        renderCell: (params) => (
+          <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 5,
+                height: '100%',
+            }}>
+            {params.value}
+            <EditIcon style={{ color: 'black', width: 25, height: 25, marginLeft: '5' }} />
+          </div>
+        ),
+    },
+    { field: 'status', headerName: 'Статус', flex: 0.15 },
     {
         field: 'readers',
         headerName: 'Принять',
-        renderCell: () => (<ArrowCircleLeftIcon style={{ color: 'black' }} />),
-        flex: 0.15,
+        renderCell: () => (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 5,
+                height: '100%',
+              }}>
+                <ArrowCircleLeftIcon style={{ color: 'black', width: 25, height: 25 }} />
+              </div>
+        ),
+        flex: 0.1,
       },
   ];
 

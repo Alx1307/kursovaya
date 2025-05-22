@@ -80,7 +80,7 @@ class IssueController {
             }
     
             const issue = await this.Issue.findByPk(issue_id, {
-                attributes: ['issue_id', 'book_id', 'reader_id'],
+                attributes: ['issue_id', 'book_id', 'reader_id', 'issue_date', 'return_date', 'status', 'comment'],
             });
     
             if (!issue) {
@@ -94,11 +94,16 @@ class IssueController {
             const reader = await this.Reader.findByPk(issue.reader_id, {
                 attributes: ['card_number']
             });
+
+            const formattedIssueDate = new Date(issue.issue_date).toLocaleDateString('ru-RU');
+            const formattedReturnDate = new Date(issue.return_date).toLocaleDateString('ru-RU');
     
             const issueData = {
                 ...issue.toJSON(),
                 book_code: book.code,
-                reader_card_number: reader.card_number
+                reader_card_number: reader.card_number,
+                issue_date: formattedIssueDate,
+                return_date: formattedReturnDate
             };
     
             return res.status(200).json(issueData);
@@ -111,7 +116,7 @@ class IssueController {
     async getAllIssuesData(req, res) {
         try {
             const issues = await this.Issue.findAll({
-                attributes: ['issue_id', 'book_id', 'reader_id']
+                attributes: ['issue_id', 'book_id', 'reader_id', 'issue_date', 'return_date', 'status', 'comment'],
             });
     
             if (!issues.length) {
@@ -122,6 +127,8 @@ class IssueController {
     
             for (let i = 0; i < issues.length; i++) {
                 const issue = issues[i];
+
+                console.log(issue);
     
                 const book = await this.Book.findByPk(issue.book_id, {
                     attributes: ['code']
@@ -130,11 +137,16 @@ class IssueController {
                 const reader = await this.Reader.findByPk(issue.reader_id, {
                     attributes: ['card_number']
                 });
+
+                const formattedIssueDate = new Date(issue.issue_date).toLocaleDateString('ru-RU');
+                const formattedReturnDate = new Date(issue.return_date).toLocaleDateString('ru-RU');
     
                 const issueData = {
                     ...issue.toJSON(),
                     book_code: book ? book.code : null,
-                    reader_card_number: reader ? reader.card_number : null
+                    reader_card_number: reader ? reader.card_number : null,
+                    issue_date: formattedIssueDate,
+                    return_date: formattedReturnDate
                 };
     
                 results.push(issueData);

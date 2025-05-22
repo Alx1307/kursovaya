@@ -13,7 +13,6 @@ const TableComponent = ({ columns, rows }) => {
         <DataGrid
           rows={rows}
           columns={updatedColumns}
-          disableColumnFilter
           disableSelectionClick
           disableDensitySelector
           hideFooterSelectedRowCount
