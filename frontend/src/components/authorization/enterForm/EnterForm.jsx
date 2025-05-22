@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './EnterForm.css';
-import logoImage from '../../../assets/red_book_comp.png';
+import DvrIcon from '@mui/icons-material/Dvr'; 
 
 const EnterForm = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const EnterForm = () => {
 
     return (
         <div className="authorization-form-container">
-            <img src={logoImage} alt="Logo" className="logo"/>
+            <DvrIcon style={{ color: '#A44A3F', fontSize: '120' }} />
             <h1 className="title">Вход в аккаунт</h1>
             <p className="subtitle">Введите ваши данные для входа в аккаунт</p>
             <form onSubmit={handleSubmit}>

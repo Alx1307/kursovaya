@@ -7,12 +7,6 @@
     padding: 20px;
 }
 
-.logo {
-    width: 120px;
-    height: auto;
-    object-fit: contain;
-}
-
 .libramanager {
     color: white;
     font-size: 44px;

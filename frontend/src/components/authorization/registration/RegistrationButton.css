@@ -6,12 +6,6 @@
     min-height: 100vh;
 }
 
-.logo {
-    width: 120px;
-    height: auto;
-    object-fit: contain;
-}
-
 .libramanager {
     color: white;
     font-size: 44px;

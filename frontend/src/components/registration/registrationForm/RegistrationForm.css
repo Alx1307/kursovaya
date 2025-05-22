@@ -3,18 +3,8 @@
     flex-direction: column;
     align-items: center;
     padding-right: 90px;
-    padding-top: 54px;
+    padding-top: 74px;
     
-}
-
-.icon-img {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 0;
-}
-
-.icon-img:focus {
-    outline: none;
 }
 
 .title {

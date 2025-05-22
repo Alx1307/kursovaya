@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css'
+import './App.css';
 import RegistrationPage from './components/registration/RegistrationPage';
 import AuthorizationPage from './components/authorization/AuthorizationPage';
 import MainPage from './components/views/MainPage';
@@ -11,6 +11,18 @@ import HallsPage from './components/views/HallsPage';
 import PrivateRoute from './routes/PrivateRoutes';
 
 function App() {
+  const clearAuthTokenOnUnload = () => {
+    localStorage.removeItem("authToken");
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', clearAuthTokenOnUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', clearAuthTokenOnUnload);
+    };
+  }, []);
+
   return (
     <Router>
       <Routes>

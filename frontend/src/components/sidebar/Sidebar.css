@@ -114,3 +114,44 @@
 .nav-link:focus {
     outline: none;
 }
+
+.logout-button {
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.logout-button button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logout-button button:active {
+    outline: none;
+}
+
+.logout-button svg {
+    vertical-align: middle;
+    fill: currentColor;
+    margin-left: 50px;
+}

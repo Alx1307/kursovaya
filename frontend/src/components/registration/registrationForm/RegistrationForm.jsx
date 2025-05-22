@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegistrationForm.css';
-import logoImage from '../../../assets/red_book_comp.png';
+import DvrIcon from '@mui/icons-material/Dvr'; 
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const RegistrationForm = () => {
 
     return (
         <div className="registration-form-container">
-            <img src={logoImage} alt="Logo" className="logo"/>
+            <DvrIcon style={{ color: '#A44A3F', fontSize: '120' }} />
             <h1 className="title">Регистрация</h1>
             <p className="subtitle">Введите ваши данные для регистрации</p>
             <form onSubmit={handleSubmit}>

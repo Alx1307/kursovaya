@@ -4,18 +4,8 @@
     align-items: center;
     justify-items: center;
     min-height: 100vh;
-    padding-top: 120px;
+    padding-top: 160px;
     
-}
-
-.icon-img {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 0;
-}
-
-.icon-img:focus {
-    outline: none;
 }
 
 .title {

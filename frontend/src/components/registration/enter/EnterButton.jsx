@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EnterButton.css';
-import logoImage from '../../../assets/white_book_comp.png';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories'; 
 
 const EnterButton = () => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const EnterButton = () => {
 
     return (
         <div className="container">
-            <img src={logoImage} alt="Logo" className="logo"/>
+            <AutoStoriesIcon style={{ color: '#FFFFFF', fontSize: '120' }} />
 
             <span className="libramanager">LibraManager</span>
 

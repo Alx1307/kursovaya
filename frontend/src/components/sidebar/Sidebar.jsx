@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import logoImage from '../../assets/white_book_comp.png';
 import HomeIcon from '@mui/icons-material/Home';
@@ -7,6 +7,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import BookIcon from '@mui/icons-material/Book';
 import LocalLibrary from '@mui/icons-material/LocalLibrary';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const menuItems = [
     { icon: HomeIcon, title: 'Главная', link: '/main' },
@@ -17,6 +18,12 @@ const menuItems = [
 ];
 
 const Sidebar = () => { 
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        navigate('/');
+    };
     return (
         <div className="sidebar">
             <div className="logo-section">
@@ -36,6 +43,12 @@ const Sidebar = () => {
                     </li>
                 ))}
             </ul>
+            <div className="logout-button">
+                <button onClick={handleLogout}>
+                    <LogoutIcon fontSize="medium" />
+                    Выйти
+                </button>
+            </div>
         </div>
     );
 };
