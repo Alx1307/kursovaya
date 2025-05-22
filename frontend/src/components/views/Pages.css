@@ -14,5 +14,5 @@ body, html {
 .content-container {
     margin-left: 250px;
     padding: 0;
-    height: 100%;
+    height: 100vh;
 }

@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
 import RegistrationPage from './components/registration/RegistrationPage';
 import AuthorizationPage from './components/authorization/AuthorizationPage';
-import MainPage from './components/pages/MainPage';
-import IssuePage from './components/pages/IssuePage';
-import BooksPage from './components/pages/BooksPage';
-import ReadersPage from './components/pages/ReadersPage';
-import HallsPage from './components/pages/HallsPage';
+import MainPage from './components/views/MainPage';
+import IssuePage from './components/views/IssuePage';
+import BooksPage from './components/views/BooksPage';
+import ReadersPage from './components/views/ReadersPage';
+import HallsPage from './components/views/HallsPage';
 import PrivateRoute from './routes/PrivateRoutes';
 
 function App() {
