@@ -20,8 +20,12 @@ const EnterForm = () => {
 
         try {
             const response = await axios.post('http://localhost:8080/login', userData);
-            alert(response.data);
-            navigate('/');
+
+            const { data: { token } } = response;
+
+            localStorage.setItem("authToken", token);
+
+            navigate('/main');
         } catch (error) {
             alert(error.response ? error.response.data : 'Ошибка подключения к серверу');
         }

@@ -1,0 +1,116 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #618d4a;
+    color: white;
+    z-index: 1;
+}
+
+.logo-section {
+    margin-top: 50px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.logo-text .logo-title {
+    font-size: 30px;
+    line-height: 1em;
+}
+
+.library-label {
+    font-size: 15px;
+}
+
+.menu-items {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: auto;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-item.active {
+    background-color: white;
+    color: #618d4a;
+}
+
+.menu-item.active svg {
+    fill: #618d4a;
+}
+
+.menu-item svg {
+    vertical-align: middle;
+    fill: currentColor;
+    margin-right: 10px;
+}
+
+.icon-wrapper {
+    width: 50px;
+    text-align: center;
+}
+
+.text {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding-left: 50px;
+}
+
+.nav-link svg {
+    vertical-align: middle;
+    fill: currentColor;
+    margin-right: 10px;
+}
+
+.nav-link.active {
+    background-color: white;
+    color: #618d4a;
+}
+
+.nav-link.active svg {
+    fill: #618d4a;
+}
+
+.nav-link:not(.active):hover {
+    color: white;
+    outline: 2px solid white;
+    outline-offset: -1px;
+}
+
+.nav-link:focus {
+    outline: none;
+}

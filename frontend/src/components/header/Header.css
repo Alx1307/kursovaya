@@ -1,0 +1,93 @@
+.header {
+    background-color: white;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+}
+
+.person-icon {
+    font-size: 24px;
+    color: #000000;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+    align-self: flex-start;
+    line-height: normal;
+}
+
+.full-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #A44A3F;
+}
+
+.role-and-email {
+    font-size: 12px;
+    color: black;
+    width: 227px;
+}
+
+.role {
+    font-weight: 600;
+}
+
+.email {
+    font-weight: lighter;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+}
+
+.clock-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 12px;
+}
+
+.current-time {
+    font-size: 16px;
+    font-weight: bold;
+    color: #A44A3F;
+}
+
+.current-date {
+    font-size: 13px;
+    font-weight: 500;
+    color: black;
+}
+
+.settings-icon {
+    font-size: 24px;
+    color: black;
+    margin-right: 12px;
+}
+
+.vertical-line {
+    width: 1px;
+    height: 58px;
+    background-color: black;
+    margin-right: 12px;
+}
