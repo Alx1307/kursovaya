@@ -8,30 +8,32 @@ const TableComponent = ({ columns, rows }) => {
   }));
 
   return (
-    <div style={{ height: 400, width: '100%', border: '2px solid #A44A3F', borderRadius: '4px' }}>
-      <DataGrid
-        autoHeight
-        rows={rows}
-        columns={updatedColumns}
-        disablePagination
-        hideFooterSelectedRowCount
-        hideFooterRowCount
-        hideFooter
-        slotProps={{
-          columnHeaders: {
-            style: {
-                color: '#A44A3F',
+    <div style={{ height: '100vh', overflowY: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10px' }}>
+      <div style={{ height: '85vh', width: '100%', overflow: 'auto', border: '2px solid #A44A3F', borderRadius: '12px', margin: '0'}}>
+        <DataGrid
+          rows={rows}
+          columns={updatedColumns}
+          disableColumnFilter
+          disableSelectionClick
+          disableDensitySelector
+          hideFooterSelectedRowCount
+          hideFooterRowCount
+          hideFooter
+          sx={{
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: '#fff',
+              color: '#A44A3F',
             },
-          },
-          cell: {
-            style: {
+            '& .MuiDataGrid-cell': {
               textAlign: 'center',
             },
-          },
-        }}
-      />
+            '& .MuiDataGrid-root': {
+              overflow: 'auto'
+            },
+          }}
+        />
+      </div>
     </div>
   );
 };
-
 export default TableComponent;
