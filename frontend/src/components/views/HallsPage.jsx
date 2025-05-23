@@ -4,12 +4,13 @@ import Header from '../header/Header';
 import TableComponent from '../table/Table';
 import LocallibraryIcon from '@mui/icons-material/LocalLibrary';
 import HallReadersModal from '../modals/HallReadersModal';
+import SearchPanel from '../search/SearchPanel';
 import './Pages.css';
 
 const HallsPage = () => {
   const [hallData, setHallData] = useState([]);
-  const [selectedHallId, setSelectedHallId] = useState(null); // Текущий открытый зал
-  const [modalOpen, setModalOpen] = useState(false); // Флаг открытого модала
+  const [selectedHallId, setSelectedHallId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [readersList, setReadersList] = useState([]); 
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const HallsPage = () => {
       if (!response.ok) throw new Error(`Ошибка загрузки читателей.`);
 
       const data = await response.json();
-      setReadersList(data); // Устанавливаем список читателей
+      setReadersList(data);
     } catch (err) {
       console.error("Ошибка загрузки читателей:", err);
     }
@@ -62,11 +63,10 @@ const HallsPage = () => {
 
   const handleOpenModal = (hallId) => {
     setSelectedHallId(hallId);
-    loadReadersForHall(hallId); // Запрашиваем читателей перед открытием модала
+    loadReadersForHall(hallId);
     setModalOpen(true);
   };
 
-  // Закрытие модального окна
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedHallId(null);
@@ -85,7 +85,17 @@ const HallsPage = () => {
     {
       field: 'readers',
       headerName: 'Читатели',
-      renderCell: (params) => (<LocallibraryIcon style={{ color: 'black' }} onClick={() => handleOpenModal(params.row.id)} />),
+      renderCell: (params) => (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 5,
+          height: '100%',
+        }}>
+          <LocallibraryIcon style={{ color: 'black' }} onClick={() => handleOpenModal(params.row.id)} />
+        </div>
+      ),
       flex: 0.15,
     },
   ];
@@ -95,6 +105,7 @@ const HallsPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
+        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="halls" buttonText="Добавить"/>
         <TableComponent columns={hallColumns} rows={hallData} />
         <HallReadersModal 
           readersList={readersList} 

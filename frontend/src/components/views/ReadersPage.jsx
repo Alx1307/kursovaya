@@ -5,12 +5,23 @@ import TableComponent from '../table/Table';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import SearchPanel from '../search/SearchPanel';
 import './Pages.css';
 
 const ReadersPage = () => {
   const [readerData, setReaderData] = useState([]);
+  const [decodedRole, setDecodedRole] = useState('');
 
   useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      const decodedToken = JSON.parse(jsonPayload);
+      setDecodedRole(decodedToken.role);
+    }
+
     const fetchReaders = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
@@ -71,6 +82,7 @@ const ReadersPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
+        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="readers" buttonText="Добавить"/>
         <TableComponent columns={readerColumns} rows={readerData} />
       </div>
     </div>

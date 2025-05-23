@@ -5,6 +5,8 @@ import TableComponent from '../table/Table';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import SearchPanel from '../search/SearchPanel';
+
 
 import './Pages.css';
 
@@ -93,6 +95,7 @@ const BooksPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
+        <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить"/>
         <TableComponent columns={booksColumns} rows={booksData} />
       </div>
     </div>

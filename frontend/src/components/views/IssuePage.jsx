@@ -4,12 +4,23 @@ import Header from '../header/Header';
 import TableComponent from '../table/Table';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchPanel from '../search/SearchPanel';
 import './Pages.css';
 
 const IssuePage = () => {
   const [issueData, setIssueData] = useState([]);
+  const [decodedRole, setDecodedRole] = useState('');
 
   useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      const decodedToken = JSON.parse(jsonPayload);
+      setDecodedRole(decodedToken.role);
+    }
+
     const fetchIssues = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
@@ -87,6 +98,7 @@ const IssuePage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
+        <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать"/>
         <TableComponent columns={issueColumns} rows={issueData} />
       </div>
     </div>
