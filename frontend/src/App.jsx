@@ -9,9 +9,11 @@ import BooksPage from './components/views/BooksPage';
 import ReadersPage from './components/views/ReadersPage';
 import HallsPage from './components/views/HallsPage';
 import PrivateRoute from './routes/PrivateRoutes';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const clearAuthTokenOnUnload = () => {
+  {/*const clearAuthTokenOnUnload = () => {
     localStorage.removeItem("authToken");
   };
 
@@ -21,11 +23,12 @@ function App() {
     return () => {
       window.removeEventListener('beforeunload', clearAuthTokenOnUnload);
     };
-  }, []);
+  }, []);*/}
 
   return (
     <Router>
       <Routes>
+        {/*<ToastContainer />*/}
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/auth" element={<AuthorizationPage />} />
 
