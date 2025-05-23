@@ -5,6 +5,7 @@ import TableComponent from '../table/Table';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchPanel from '../search/SearchPanel';
+import axios from 'axios';
 import './Pages.css';
 
 const IssuePage = () => {
@@ -12,14 +13,26 @@ const IssuePage = () => {
   const [decodedRole, setDecodedRole] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-      const decodedToken = JSON.parse(jsonPayload);
-      setDecodedRole(decodedToken.role);
-    }
+    const fetchUserRole = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) return;
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        };
+
+        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const userData = response.data;
+        setDecodedRole(userData.role);
+      } catch (err) {
+        console.error('Ошибка при получении роли:', err.message);
+      }
+    };
+
+    fetchUserRole();
 
     const fetchIssues = async () => {
       try {
@@ -70,28 +83,33 @@ const IssuePage = () => {
                 height: '100%',
             }}>
             {params.value}
-            <EditIcon style={{ color: 'black', width: 25, height: 25, marginLeft: '5' }} />
+            { decodedRole === 'Библиотекарь' && (
+            <EditIcon style={{ color: 'black', width: 25, height: 25, marginLeft: '5px' }} />
+          )}
           </div>
         ),
     },
     { field: 'status', headerName: 'Статус', flex: 0.15 },
-    {
-        field: 'readers',
-        headerName: 'Принять',
-        renderCell: () => (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 5,
-                height: '100%',
-              }}>
-                <ArrowCircleLeftIcon style={{ color: 'black', width: 25, height: 25 }} />
-              </div>
-        ),
-        flex: 0.1,
-      },
   ];
+
+  if (decodedRole === 'Библиотекарь') {
+    issueColumns.push({
+      field: 'return',
+      headerName: 'Принять',
+      renderCell: () => (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 5,
+          height: '100%',
+        }}>
+          <ArrowCircleLeftIcon style={{ color: 'black', width: 25, height: 25 }} />
+        </div>
+      ),
+      flex: 0.1,
+    });
+  }
 
   return (
     <div>

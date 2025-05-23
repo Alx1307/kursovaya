@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SearchPanel from '../search/SearchPanel';
+import axios from 'axios';
 import './Pages.css';
 
 const ReadersPage = () => {
@@ -13,14 +14,26 @@ const ReadersPage = () => {
   const [decodedRole, setDecodedRole] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-      const decodedToken = JSON.parse(jsonPayload);
-      setDecodedRole(decodedToken.role);
-    }
+    const fetchUserRole = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) return;
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        };
+
+        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const userData = response.data;
+        setDecodedRole(userData.role);
+      } catch (err) {
+        console.error('Ошибка при получении роли:', err.message);
+      }
+    };
+
+    fetchUserRole();
 
     const fetchReaders = async () => {
       try {
@@ -69,9 +82,15 @@ const ReadersPage = () => {
             gap: 5,
             height: '100%',
           }}>
-            <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
-            <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
-            <ListAltIcon style={{ color: 'black', width: 25, height: 25 }} />
+            { decodedRole === 'Библиотекарь' ? (
+              <>
+                <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
+                <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
+                <ListAltIcon style={{ color: 'black', width: 25, height: 25 }} />
+              </>
+            ) : (
+              <ListAltIcon style={{ color: 'black', width: 25, height: 25 }} />
+            )}
           </div>
         ),
     },

@@ -6,14 +6,35 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import SearchPanel from '../search/SearchPanel';
-
-
+import axios from 'axios';
 import './Pages.css';
 
 const BooksPage = () => {
   const [booksData, setBooksData] = useState([]);
+  const [decodedRole, setDecodedRole] = useState('');
 
   useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) return;
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        };
+
+        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const userData = response.data;
+        setDecodedRole(userData.role);
+      } catch (err) {
+        console.error('Ошибка при получении роли:', err.message);
+      }
+    };
+
+    fetchUserRole();
+
     const fetchBooks = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
@@ -70,25 +91,36 @@ const BooksPage = () => {
     },
     { field: 'isbn', headerName: 'ISBN', flex: 0.2 },
     { field: 'available', headerName: 'Доступно', flex: 0.1 },
-    {
-        field: 'action',
-        headerName: '',
-        flex: 0.1,
-        renderCell: (params) => (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 5,
-            height: '100%',
-          }}>
-            <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
-            <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
-            <ArrowCircleRightIcon style={{ color: 'black', width: 25, height: 25 }} />
-          </div>
-        ),
-    },
   ];
+
+  if (decodedRole !== 'Администратор') {
+    booksColumns.push({
+      field: 'action',
+      headerName: decodedRole === 'Библиотекарь' ? 'Выдать' : '',
+      flex: 0.1,
+      renderCell: (params) => (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 5,
+          height: '100%',
+        }}>
+          {
+            decodedRole === 'Библиограф' &&
+            (<>
+              <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
+              <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
+            </>)
+          }
+          {
+            decodedRole !== 'Библиограф' &&
+            <ArrowCircleRightIcon style={{ color: 'black', width: 25, height: 25 }} />
+          }
+        </div>
+      ),
+    });
+  }
 
   return (
     <div>
