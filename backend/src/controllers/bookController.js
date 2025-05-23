@@ -1,8 +1,12 @@
+const Sequelize = require('sequelize');
+const { Op } = Sequelize;
+
 const database = require('../config/database');
 const sequelize = database.sequelize;
 const Book = require('../models/Book');
 const Author = require('../models/Author');
 const BookAuthor = require('../models/BookAuthor');
+const Issue = require('../models/Issue');
 
 class BookController {
     constructor(BookModel, AuthorModel, BookAuthorModel) {
@@ -125,6 +129,15 @@ class BookController {
                     where: { author_id: authorIds }
                 });
 
+                const issuedCount = await Issue.count({
+                    where: {
+                        book_id: book.book_id,
+                        status: { [Op.or]: ['Выдана', 'Просрочена'] },
+                    },
+                });
+
+                const availableQuantity = book.quantity - issuedCount;
+
                 const bookInfo = {
                     ...book.toJSON(),
                     Authors: authors.map(author => ({
@@ -132,7 +145,8 @@ class BookController {
                         surname: author.surname,
                         name: author.name,
                         patronymic: author.patronymic
-                    }))
+                    })),
+                    available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
                 };
 
                 result.push(bookInfo);

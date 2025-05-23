@@ -90,12 +90,12 @@ const BooksPage = () => {
           },
     },
     { field: 'isbn', headerName: 'ISBN', flex: 0.2 },
-    { field: 'available', headerName: 'Доступно', flex: 0.1 },
+    { field: 'available_quantity', headerName: 'Доступно', flex: 0.1 },
   ];
 
   if (decodedRole !== 'Администратор') {
     booksColumns.push({
-      field: 'action',
+      field: 'actions',
       headerName: decodedRole === 'Библиотекарь' ? 'Выдать' : '',
       flex: 0.1,
       renderCell: (params) => (
