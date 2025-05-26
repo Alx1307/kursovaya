@@ -9,7 +9,7 @@ const TableComponent = ({ columns, rows }) => {
 
   return (
     <div style={{ height: '100vh', overflowY: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10px' }}>
-      <div style={{ height: '75vh', width: '100%', overflow: 'auto', border: '2px solid #A44A3F', borderRadius: '12px', margin: '0'}}>
+      <div style={{ height: '75vh', width: '100%', overflow: 'auto', border: '2px solid #A44A3F', borderRadius: '1px', margin: '0'}}>
         <DataGrid
           rows={rows}
           columns={updatedColumns}

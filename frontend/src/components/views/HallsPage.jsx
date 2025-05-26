@@ -5,6 +5,7 @@ import TableComponent from '../table/Table';
 import LocallibraryIcon from '@mui/icons-material/LocalLibrary';
 import HallReadersModal from '../modals/HallReadersModal';
 import SearchPanel from '../search/SearchPanel';
+import IconButton from '@mui/material/IconButton';
 import './Pages.css';
 
 const HallsPage = () => {
@@ -93,7 +94,10 @@ const HallsPage = () => {
           gap: 5,
           height: '100%',
         }}>
-          <LocallibraryIcon style={{ color: 'black' }} onClick={() => handleOpenModal(params.row.id)} />
+          <IconButton className="IconButton" onClick={() => handleOpenModal(params.row.id)}>
+            <LocallibraryIcon style={{ color: 'black' }} />
+          </IconButton>
+
         </div>
       ),
       flex: 0.15,

@@ -10,9 +10,31 @@ const Header = ({ token }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [currentTime, setCurrentTime] = useState(() => new Date());
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setIsEditing(false);
+  };
+
+  const resetEditing = () => {
+    setIsEditing(false);
+  };
+
+  const reloadUserData = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await axios.get('http://localhost:8080/librarian/data', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error('Ошибка загрузки:', error);
+    }
+  };
 
   const updateTime = () => {
     setCurrentTime(new Date());
@@ -65,14 +87,14 @@ const Header = ({ token }) => {
                 <div className="current-date">{formattedDate}</div>
               </div>
               <div className="vertical-line"></div>
-              <IconButton onClick={handleOpen}>
+              <IconButton className="IconButton" onClick={handleOpen}>
                 <SettingsIcon color="black" fontSize="large" />
               </IconButton>
             </div>
           </div>
         </>
       )}
-      <ProfileModal userInfo={userInfo} open={open} handleClose={handleClose} />
+      <ProfileModal userInfo={userInfo} open={open} handleClose={handleClose} reloadUserData={reloadUserData} resetEditing={resetEditing} />
     </header>
   );
 };
