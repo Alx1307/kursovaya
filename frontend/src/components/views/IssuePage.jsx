@@ -5,12 +5,20 @@ import TableComponent from '../table/Table';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchPanel from '../search/SearchPanel';
+import ViewIssueModal from '../modals/ViewIssueModal';
 import axios from 'axios';
 import './Pages.css';
 
 const IssuePage = () => {
   const [issueData, setIssueData] = useState([]);
   const [decodedRole, setDecodedRole] = useState('');
+  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleRowClick = (row) => {
+    setSelectedIssue(row);
+    setModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -66,7 +74,22 @@ const IssuePage = () => {
   }, []); 
 
   const issueColumns = [
-    { field: 'id', headerName: 'ID', flex: 0.05 },
+    {
+      field: 'id',
+      headerName: 'ID',
+      flex: 0.05,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'inline-block',
+            cursor: 'pointer'
+          }}
+          onClick={() => handleRowClick(params.row)}
+        >
+          {params.value}
+        </div>
+      )
+    },
     { field: 'book_code', headerName: 'Шифр книги', flex: 0.1 },
     { field: 'reader_card_number', headerName: 'Номер читательского билета', flex: 0.2 },
     { field: 'issue_date', headerName: 'Дата выдачи', flex: 0.15 },
@@ -118,6 +141,7 @@ const IssuePage = () => {
         <Header />
         <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать"/>
         <TableComponent columns={issueColumns} rows={issueData} />
+        <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
       </div>
     </div>
   );
