@@ -91,17 +91,37 @@ class BookController {
             const authorIds = bookAuthorRecords.map(record => record.author_id);
 
             const authors = await this.Author.findAll({
-                where: { author_id: authorIds }
+                where: { author_id: authorIds },
+                attributes: ['surname', 'name', 'patronymic'],
+            }); 
+
+            let allAuthors;
+
+            if (authors.length > 0) {
+                allAuthors = authors.map((author) => {
+                    let fullName = `${author.surname} ${author.name}`;
+                    if (author.patronymic && author.patronymic.trim()) {
+                        fullName += ` ${author.patronymic}`;
+                    }
+                    return fullName;
+                }).join(', ');
+            } else {
+                allAuthors = '-';
+            }
+
+            const issuedCount = await Issue.count({
+                where: {
+                    book_id: book.book_id,
+                    status: { [Op.or]: ['Выдана', 'Просрочена'] },
+                },
             });
+
+            const availableQuantity = book.quantity - issuedCount;
 
             const result = {
                 ...book.toJSON(),
-                Authors: authors.map(author => ({
-                    author_id: author.author_id,
-                    surname: author.surname,
-                    name: author.name,
-                    patronymic: author.patronymic
-                }))
+                authors: allAuthors,
+                available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
             };
 
             return res.json(result);
@@ -124,10 +144,25 @@ class BookController {
                 });
 
                 const authorIds = bookAuthors.map(author => author.author_id);
-
+                
                 const authors = await this.Author.findAll({
-                    where: { author_id: authorIds }
-                });
+                    where: { author_id: authorIds },
+                    attributes: ['surname', 'name', 'patronymic'],
+                }); 
+
+                let allAuthors;
+
+                if (authors.length > 0) {
+                    allAuthors = authors.map((author) => {
+                        let fullName = `${author.surname} ${author.name}`;
+                        if (author.patronymic && author.patronymic.trim()) {
+                            fullName += ` ${author.patronymic}`;
+                        }
+                        return fullName;
+                    }).join(', ');
+                } else {
+                    allAuthors = '-';
+                }
 
                 const issuedCount = await Issue.count({
                     where: {
@@ -140,12 +175,7 @@ class BookController {
 
                 const bookInfo = {
                     ...book.toJSON(),
-                    Authors: authors.map(author => ({
-                        author_id: author.author_id,
-                        surname: author.surname,
-                        name: author.name,
-                        patronymic: author.patronymic
-                    })),
+                    authors: allAuthors,
                     available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
                 };
 

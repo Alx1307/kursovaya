@@ -1,4 +1,4 @@
-.reader-modal {
+.book-modal {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -9,20 +9,21 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
     padding: 24px;
+    overflow-y: auto;
 }
   
-.reader-modal-header {
+.book-modal-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.reader-modal .reader-modal-title{
+.book-modal .book-modal-title{
     color: #A44A3F;
     font-weight: bold;
 }
   
-.reader-modal-icon-container {
+.book-modal-icon-container {
     background-color: #618d4a7f;
     width: 60px;
     height: 60px;
@@ -32,7 +33,7 @@
     align-items: center;
 }
   
-.reader-modal-info-section {
+.book-modal-info-section {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -40,13 +41,13 @@
     align-items: stretch;
 }
 
-.modal-row {
+.book-modal-row {
     display: flex;
     align-items: center;
     gap: 220px;
 }
   
-.modal-label {
+.book-modal-label {
     font-size: 20px;
     color: #A44A3F;
     min-width: 80px;
@@ -54,7 +55,7 @@
     white-space: nowrap;
 }
   
-.modal-textfield .MuiInputBase-root {
+.book-modal-textfield .MuiInputBase-root {
     max-width: 300px;
     height: 40px;
     border-radius: 12px;
@@ -62,6 +63,6 @@
     margin-left: auto; 
 }
   
-.modal-textfield .MuiInputBase-inputReadOnly {
+.book-modal-textfield .MuiInputBase-inputReadOnly {
     background-color: transparent;
 }

@@ -7,13 +7,13 @@ import './styles/ViewReaderModal.css';
 const ViewReaderModal = ({ open, handleClose, readerData }) => {
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box className="profile-modal">
-        <div className="profile-modal-header">
-          <div className="profile-modal-icon-container">
+      <Box className="reader-modal">
+        <div className="reader-modal-header">
+          <div className="reader-modal-icon-container">
             <LocalLibrary style={{ color: '#000', fontSize: '30px' }} />
           </div>
           <div style={{ flexGrow: 1, textAlign: 'center' }}>
-            <Typography variant="h6" component="div" className="profile-modal-title">
+            <Typography variant="h6" component="div" className="reader-modal-title">
               Читатель
             </Typography>
           </div>
@@ -26,7 +26,7 @@ const ViewReaderModal = ({ open, handleClose, readerData }) => {
         <Divider style={{ backgroundColor: '#A44A3F', height: '1px' }} />
         
         {readerData && (
-          <div className="profile-modal-info-section">
+          <div className="reader-modal-info-section">
             <div className="modal-row">
                 <label className="modal-label">ID:</label>
                 <TextField

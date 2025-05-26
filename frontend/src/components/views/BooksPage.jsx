@@ -6,12 +6,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import SearchPanel from '../search/SearchPanel';
+import ViewBookModal from '../modals/ViewBookModal';
 import axios from 'axios';
 import './Pages.css';
 
 const BooksPage = () => {
   const [booksData, setBooksData] = useState([]);
   const [decodedRole, setDecodedRole] = useState('');
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleRowClick = (row) => {
+    setSelectedBook(row);
+    setModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -54,11 +62,6 @@ const BooksPage = () => {
 
         const processedData = data.map((item) => ({
             ...item,
-            fullAuthorNames: (item.Authors || []).map(({ surname, name, patronymic }) => {
-              const fullName = `${surname ?? ''} ${name ?? ''} ${patronymic ?? ''}`.trim();
-              console.log('Автор:', { surname, name, patronymic, fullName });
-              return fullName;
-            }),
             id: item.book_id,
         }));
 
@@ -75,19 +78,27 @@ const BooksPage = () => {
 
   const booksColumns = [
     { field: 'id', headerName: 'ID', flex: 0.05 },
-    { field: 'title', headerName: 'Название', flex: 0.2 },
+    {
+      field: 'title',
+      headerName: 'Название',
+      flex: 0.2,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'inline-block',
+            cursor: 'pointer'
+          }}
+          onClick={() => handleRowClick(params.row)}
+        >
+          {params.value}
+        </div>
+      )
+    },
     { field: 'code', headerName: 'Шифр', flex: 0.15 },
     {
-        field: 'fullAuthorNames',
+        field: 'authors',
         headerName: 'Авторы',
         flex: 0.2,
-        valueGetter: (params) => {
-            if (!params.row || !Array.isArray(params.row.fullAuthorNames)) {
-              return '-';
-            }
-            const names = params.row.fullAuthorNames.filter(name => !!name);
-            return names.length > 0 ? names.join(', ') : '-';
-          },
     },
     { field: 'isbn', headerName: 'ISBN', flex: 0.2 },
     { field: 'available_quantity', headerName: 'Доступно', flex: 0.1 },
@@ -129,6 +140,7 @@ const BooksPage = () => {
         <Header />
         <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить"/>
         <TableComponent columns={booksColumns} rows={booksData} />
+        <ViewBookModal open={modalOpen} handleClose={() => setModalOpen(false)} bookData={selectedBook} />
       </div>
     </div>
   );

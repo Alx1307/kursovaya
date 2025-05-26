@@ -19,7 +19,6 @@ const ReadersPage = () => {
 
   const handleRowClick = (row) => {
     setSelectedUser(row);
-    console.log(selectedUser);
     setModalOpen(true);
   };
 
