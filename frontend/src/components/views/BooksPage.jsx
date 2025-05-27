@@ -101,7 +101,19 @@ const BooksPage = () => {
         flex: 0.2,
     },
     { field: 'isbn', headerName: 'ISBN', flex: 0.2 },
-    { field: 'available_quantity', headerName: 'Доступно', flex: 0.1 },
+    {
+      field: 'available_quantity',
+      headerName: 'Доступно',
+      flex: 0.1,
+      renderCell: (params) => {
+        const isLowStock = parseInt(params.row.available) < 3;
+        return (
+          <span style={{ fontWeight: isLowStock ? 'bold' : 'normal', color: isLowStock ? '#A44A3F' : 'black', fontSize: isLowStock ? '18px' : '' }}>
+            {params.row.available}/{params.row.quantity}
+          </span>
+        );
+      },
+    },
   ];
 
   if (decodedRole !== 'Администратор') {

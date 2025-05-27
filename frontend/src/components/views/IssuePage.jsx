@@ -112,7 +112,17 @@ const IssuePage = () => {
           </div>
         ),
     },
-    { field: 'status', headerName: 'Статус', flex: 0.15 },
+    {
+      field: 'status',
+      headerName: 'Статус',
+      flex: 0.15,
+      renderCell: (params) => {
+        const isOverdue = params.row.status === 'Просрочена';
+        return (
+          <span style={{ fontWeight: isOverdue ? 'bold' : 'normal', color: isOverdue ? '#A44A3F' : 'black', fontSize: isOverdue ? '18px' : '' }}>{params.row.status}</span>
+        );
+      },
+    },
   ];
 
   if (decodedRole === 'Библиотекарь') {

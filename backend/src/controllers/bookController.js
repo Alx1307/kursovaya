@@ -21,7 +21,7 @@ class BookController {
                 return res.status(403).send('Доступ запрещен.');
             }
 
-            const { title, publish_year, isbn, code, date_added, quantity, authors } = req.body;
+            const { title, publish_year, isbn, code, quantity, authors } = req.body;
 
             if (!title) return res.status(400).send("Название книги обязательно.");
             if (!isbn) return res.status(400).send("ISBN книги обязателен.");
@@ -32,7 +32,7 @@ class BookController {
                 publish_year,
                 isbn,
                 code,
-                date_added,
+                date_added: new Date(),
                 quantity
             });
 
@@ -176,6 +176,7 @@ class BookController {
                 const bookInfo = {
                     ...book.toJSON(),
                     authors: allAuthors,
+                    available: availableQuantity,
                     available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
                 };
 

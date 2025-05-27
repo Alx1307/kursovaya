@@ -86,6 +86,13 @@ class IssueController {
             if (!issue) {
                 return res.status(404).send('Нет такой выдачи');
             }
+
+            const today = new Date();
+            const returnDate = new Date(issue.return_date);
+
+            if (today > returnDate && issue.status === 'Выдана') {
+                await issue.update({ status: 'Просрочена' });
+            }
     
             const book = await this.Book.findByPk(issue.book_id, {
                 attributes: ['code']
@@ -128,7 +135,12 @@ class IssueController {
             for (let i = 0; i < issues.length; i++) {
                 const issue = issues[i];
 
-                console.log(issue);
+                const today = new Date();
+                const returnDate = new Date(issue.return_date);
+
+                if (today > returnDate && issue.status === 'Выдана') {
+                    await issue.update({ status: 'Просрочена' });
+                }
     
                 const book = await this.Book.findByPk(issue.book_id, {
                     attributes: ['code']

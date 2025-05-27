@@ -82,6 +82,14 @@ const HallsPage = () => {
       field: 'seatsString',
       headerName: 'Количество свободных мест',
       flex: 0.35,
+      renderCell: (params) => {
+        const isFull = parseInt(params.row.freeSeats) < 10;
+        return (
+          <span style={{ fontWeight: isFull ? 'bold' : 'normal', color: isFull ? '#A44A3F' : 'black', fontSize: isFull ? '18px' : '' }}>
+            {params.row.freeSeats}/{params.row.seatsQuantity}
+          </span>
+        );
+      },
   },
     {
       field: 'readers',
