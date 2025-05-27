@@ -1210,6 +1210,85 @@ paths:
                     description: Сообщение об ошибке
                     example: Произошла внутренняя ошибка сервера.
 
+  /readers/:reader_id/issues:
+    get:
+      summary: Получение списка выдач книг для конкретного читателя
+      security:
+        - bearerAuth: []
+      tags:
+        - Читатели
+      parameters:
+        - in: path
+          name: reader_id
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор читателя
+      responses:
+        '200':
+          description: Возврат списка выдач книг для читателя.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    issue_id:
+                      type: integer
+                      description: Уникальный идентификатор выдачи
+                    book_id:
+                      type: integer
+                      description: Идентификатор книги
+                    issue_date:
+                      type: string
+                      format: date-time
+                      description: Дата выдачи книги
+                    return_date:
+                      type: string
+                      format: date-time
+                      description: Планируемая дата возврата книги
+                    status:
+                      type: string
+                      description: Статус выдачи ('Выдана', 'Возвращена', 'Просрочена')
+                    comment:
+                      type: string
+                      nullable: true
+                      description: Дополнительный комментарий к выдаче
+        '400':
+          description: Неправильный идентификатор читателя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Текстовое сообщение об ошибке
+                    example: Читатель не найден.
+        '404':
+          description: Нет выдач для данного читателя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Текстовое сообщение об ошибке
+                    example: У данного читателя нет выдач.
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера.
+
   /halls/get/:hall_id:
     get:
       summary: Получение информации о зале по идентификатору

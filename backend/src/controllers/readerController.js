@@ -2,6 +2,8 @@ const database = require('../config/database');
 const sequelize = database.sequelize;
 const Reader = require('../models/Reader');
 const Hall = require('../models/Hall');
+const Issue = require('../models/Issue');
+const Book = require('../models/Book');
 
 class ReaderController {
     constructor(ReaderModel) {
@@ -147,6 +149,41 @@ class ReaderController {
             await reader.destroy();
 
             return res.status(200).send('Читатель успешно удален.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
+
+    async getIssuesForReader(req, res) {
+        try {
+            const { reader_id } = req.params;
+
+            console.log(reader_id);
+    
+            if (!reader_id) {
+                return res.status(400).send('Читатель не найден.');
+            }
+    
+            const issues = await Issue.findAll({
+                where: { reader_id },
+                order: [['issue_date', 'DESC']]
+            });
+    
+            if (!issues || issues.length === 0) {
+                return res.status(404).send(`У данного читателя нет выдач.`);
+            }
+    
+            const results = issues.map(issue => ({
+                issue_id: issue.issue_id,
+                book_id: issue.book_id,
+                issue_date: issue.issue_date,
+                return_date: issue.return_date,
+                status: issue.status,
+                comment: issue.comment,
+            }));
+    
+            return res.status(200).json(results);
         } catch (err) {
             console.error(err.message);
             return res.status(500).send(err.message);

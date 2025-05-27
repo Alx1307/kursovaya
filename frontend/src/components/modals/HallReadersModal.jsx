@@ -18,6 +18,12 @@ const style = {
   p: 4,
 };
 
+const scrollStyle = {
+  marginTop: '10px',
+  maxHeight: '420px',
+  overflowY: 'auto',
+};
+
 const HallReadersModal = ({ readersList, open, handleClose }) => {
   return (
     <Modal open={open} onClose={handleClose}>
@@ -46,6 +52,7 @@ const HallReadersModal = ({ readersList, open, handleClose }) => {
           </div>
         </div>
         <Divider style={{ backgroundColor: '#A44A3F', height: '1px' }} />
+        <Box sx={scrollStyle}>
         {readersList.length > 0 ? (
           <List dense>
             {readersList.map((reader, index) => (
@@ -62,6 +69,7 @@ const HallReadersModal = ({ readersList, open, handleClose }) => {
             Зал пуст
           </Typography>
         )}
+        </Box>
       </Box>
     </Modal>
   );

@@ -10,6 +10,7 @@ router.post('/add', authMiddleware, controller.addReader.bind(controller));
 
 router.get('/get/:reader_id', authMiddleware, controller.getReaderData.bind(controller));
 router.get('/all', authMiddleware, controller.getAllReaders.bind(controller));
+router.get('/:reader_id/issues', authMiddleware, controller.getIssuesForReader.bind(controller));
 
 router.patch('/edit/:reader_id', authMiddleware, controller.editReader.bind(controller));
 
