@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import ViewReaderModal from '../modals/ViewReaderModal';
 import AddReaderModal from '../modals/AddReaderModal';
 import ConfirmDeleteReaderModal from '../modals/ConfirmDeleteReaderModal';
+import ReaderIssuesModal from '../modals/ReaderIssuesModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -21,6 +22,8 @@ const ReadersPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [readerToDelete, setReaderToDelete] = useState(null);
+  const [issuesModalOpen, setIssuesModalOpen] = useState(false);
+  const [issuesList, setIssuesList] = useState([]);
 
   const handleRowClick = (row) => {
     setSelectedUser(row);
@@ -34,6 +37,18 @@ const ReadersPage = () => {
   const handleDeleteClick = (readerId) => {
     setReaderToDelete(readerId);
     setDeleteModalOpen(true);
+  };
+
+  const handleOpenIssuesModal = (readerId) => {
+    setSelectedUser(readerId),
+    loadIssuesForReader(readerId),
+    setIssuesModalOpen(true);
+  };
+
+  const handleCloseIssuesModal = () => {
+    setIssuesModalOpen(false);
+    setSelectedUser(null);
+    setIssuesList([]);
   };
 
   const deleteReader = async () => {
@@ -80,6 +95,26 @@ const ReadersPage = () => {
      } catch (err) {
        console.error("Ошибка загрузки читателей:", err);
      }
+  };
+
+  const loadIssuesForReader = async (readerId) => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+
+      const response = await fetch(`http://localhost:8080/readers/${readerId}/issues`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error(`Ошибка загрузки выдач.`);
+
+      const data = await response.json();
+      setIssuesList(data);
+    } catch (err) {
+      console.error("Ошибка загрузки выдач:", err);
+    }
   };
 
   useEffect(() => {
@@ -180,7 +215,7 @@ const ReadersPage = () => {
                 <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
                   <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
                 </IconButton>
-                <IconButton className="IconButton" /*onClick={() => handleOpenModal(params.row.id)}*/>
+                <IconButton className="IconButton" onClick={() => handleOpenIssuesModal(params.row.id)}>
                   <ListAltIcon style={{ color: 'black', width: 25, height: 25 }} />
                 </IconButton>
               </>
@@ -204,6 +239,7 @@ const ReadersPage = () => {
         <ViewReaderModal open={modalOpen} handleClose={() => setModalOpen(false)} readerData={selectedUser} />
         <AddReaderModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshReaders} />
         <ConfirmDeleteReaderModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteReader} />
+        <ReaderIssuesModal issuesList={issuesList} open={issuesModalOpen} handleClose={handleCloseIssuesModal}/>
       </div>
     </div>
   );

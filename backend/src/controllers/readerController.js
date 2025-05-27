@@ -170,10 +170,6 @@ class ReaderController {
                 order: [['issue_date', 'DESC']]
             });
     
-            if (!issues || issues.length === 0) {
-                return res.status(404).send(`У данного читателя нет выдач.`);
-            }
-    
             const results = issues.map(issue => ({
                 issue_id: issue.issue_id,
                 book_id: issue.book_id,

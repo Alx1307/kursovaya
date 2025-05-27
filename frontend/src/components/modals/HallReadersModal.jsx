@@ -65,7 +65,7 @@ const HallReadersModal = ({ readersList, open, handleClose }) => {
             ))}
           </List>
         ) : (
-          <Typography variant="body1" style={{ paddingTop: '20px', textAlign: 'center' }}>
+          <Typography style={{ paddingTop: '20px', textAlign: 'center' }}>
             Зал пуст
           </Typography>
         )}
