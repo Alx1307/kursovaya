@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import SearchPanel from '../search/SearchPanel';
 import ViewBookModal from '../modals/ViewBookModal';
+import IconButton from '@mui/material/IconButton';
+import ConfirmDeleteBookModal from '../modals/ConfirmDeleteBookModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -15,10 +17,63 @@ const BooksPage = () => {
   const [decodedRole, setDecodedRole] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState(null);
 
   const handleRowClick = (row) => {
     setSelectedBook(row);
     setModalOpen(true);
+  };
+
+  const handleDeleteClick = (bookId) => {
+    setBookToDelete(bookId);
+    setDeleteModalOpen(true);
+  };
+
+  const deleteBook = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await axios.delete(`http://localhost:8080/books/delete/${bookToDelete}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log('Книга успешно удалена');
+        refreshBooks();
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении книги:', error);
+    } finally {
+      setDeleteModalOpen(false);
+      setBookToDelete(null);
+    }
+  };
+
+  const fetchBooks = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+
+        const response = await fetch('http://localhost:8080/books/all', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+          },
+        });
+  
+        if (!response.ok) throw new Error(`Ошибка загрузки книг.`);
+  
+        const data = await response.json();
+  
+        const transformedData = data.map((item) => ({
+          ...item,
+          id: item.book_id,
+        }));
+  
+        setBooksData(transformedData);
+      } catch (err) {
+        console.error("Ошибка загрузки книг:", err);
+      }
   };
 
   useEffect(() => {
@@ -75,6 +130,10 @@ const BooksPage = () => {
 
     fetchBooks();
   }, []);
+
+  const refreshBooks = () => {
+    fetchBooks();
+  };
 
   const booksColumns = [
     { field: 'id', headerName: 'ID', flex: 0.05 },
@@ -133,7 +192,9 @@ const BooksPage = () => {
             decodedRole === 'Библиограф' &&
             (<>
               <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
-              <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
+              <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
+                  <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
+              </IconButton>
             </>)
           }
           {
@@ -153,6 +214,7 @@ const BooksPage = () => {
         <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить"/>
         <TableComponent columns={booksColumns} rows={booksData} />
         <ViewBookModal open={modalOpen} handleClose={() => setModalOpen(false)} bookData={selectedBook} />
+        <ConfirmDeleteBookModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteBook} />
       </div>
     </div>
   );
