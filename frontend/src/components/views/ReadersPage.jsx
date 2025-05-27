@@ -9,6 +9,7 @@ import SearchPanel from '../search/SearchPanel';
 import IconButton from '@mui/material/IconButton';
 import ViewReaderModal from '../modals/ViewReaderModal';
 import AddReaderModal from '../modals/AddReaderModal';
+import ConfirmDeleteReaderModal from '../modals/ConfirmDeleteReaderModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -18,6 +19,8 @@ const ReadersPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [readerToDelete, setReaderToDelete] = useState(null);
 
   const handleRowClick = (row) => {
     setSelectedUser(row);
@@ -26,6 +29,31 @@ const ReadersPage = () => {
 
   const handleAddClick = () => {
      setShowAddModal(true);
+  };
+
+  const handleDeleteClick = (readerId) => {
+    setReaderToDelete(readerId);
+    setDeleteModalOpen(true);
+  };
+
+  const deleteReader = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await axios.delete(`http://localhost:8080/readers/delete/${readerToDelete}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log('Читатель успешно удален');
+        refreshReaders();
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении читателя:', error);
+    } finally {
+      setDeleteModalOpen(false);
+      setReaderToDelete(null);
+    }
   };
 
   const fetchReaders = async () => {
@@ -146,10 +174,10 @@ const ReadersPage = () => {
           >
             { decodedRole === 'Библиотекарь' ? (
               <>
-                <IconButton className="IconButton" /*onClick={() => handleOpenModal(params.row.id)}*/>
+                <IconButton className="IconButton" >
                   <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
                 </IconButton>
-                <IconButton className="IconButton" /*onClick={() => handleOpenModal(params.row.id)}*/>
+                <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
                   <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
                 </IconButton>
                 <IconButton className="IconButton" /*onClick={() => handleOpenModal(params.row.id)}*/>
@@ -175,6 +203,7 @@ const ReadersPage = () => {
         <TableComponent columns={readerColumns} rows={readerData} />
         <ViewReaderModal open={modalOpen} handleClose={() => setModalOpen(false)} readerData={selectedUser} />
         <AddReaderModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshReaders} />
+        <ConfirmDeleteReaderModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteReader} />
       </div>
     </div>
   );
