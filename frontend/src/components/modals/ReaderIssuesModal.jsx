@@ -3,7 +3,7 @@ import { Modal, Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListIte
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import PersonIcon from '@mui/icons-material/Person';
+import BookIcon from '@mui/icons-material/Book';
 
 const style = {
   position: 'absolute',
@@ -38,7 +38,7 @@ const ReaderIssuesModal = ({ issuesList, open, handleClose }) => {
               justifyContent: 'center',
               alignItems: 'center',
           }}>
-              <LibraryBooksIcon style={{ color: '#000', fontSize: '30px'}} /> {/* иконка книги */}
+              <LibraryBooksIcon style={{ color: '#000', fontSize: '30px'}} />
           </div>
           <div style={{ flexGrow: 1, textAlign: 'center' }}>
             <Typography variant="h6" component="div" style={{ color: '#A44A3F', fontWeight: 'bold' }}>
@@ -58,7 +58,7 @@ const ReaderIssuesModal = ({ issuesList, open, handleClose }) => {
               {issuesList.map((issue, index) => (
                 <ListItem key={index}>
                   <ListItemAvatar>
-                    <Avatar><PersonIcon /></Avatar>
+                    <Avatar><BookIcon /></Avatar>
                   </ListItemAvatar>
                   <ListItemText
                     primary={

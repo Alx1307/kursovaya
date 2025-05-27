@@ -220,7 +220,7 @@ const ReadersPage = () => {
                 </IconButton>
               </>
             ) : (
-              <IconButton className="IconButton" /*onClick={() => handleOpenModal(params.row.id)}*/>
+              <IconButton className="IconButton" onClick={() => handleOpenIssuesModal(params.row.id)}>
                   <ListAltIcon style={{ color: 'black', width: 25, height: 25 }} />
               </IconButton>
             )}
