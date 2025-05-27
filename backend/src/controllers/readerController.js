@@ -14,11 +14,18 @@ class ReaderController {
                 return res.status(403).send('Доступ запрещен.');
             }
 
-            const { name, card_number, birth_date, phone, hall_id } = req.body;
+            let { name, card_number, birth_date, phone, hall_id } = req.body;
 
             if (!name) return res.status(400).send('ФИО читателя обязательно.');
             if (!card_number) return res.status(400).send('Номер читательского билета обязательно.');
             if (!hall_id) return res.status(400).send('Номер зала обязателен.');
+
+            if (birth_date && typeof birth_date === 'string') {
+                const parts = birth_date.split('.').map(Number);
+                if (parts.length === 3) {
+                    birth_date = `${parts[2]}-${parts[1].toString().padStart(2, '0')}-${parts[0].toString().padStart(2, '0')}`;
+                }
+            }
 
             const hall = await Hall.findByPk(hall_id, {
                 attributes: ['seats_quantity']

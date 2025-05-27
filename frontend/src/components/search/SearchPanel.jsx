@@ -4,7 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
 import './SearchPanel.css';
 
-const SearchPanel = ({ placeholder, pageType, buttonText }) => {
+const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
     const [decodedRole, setDecodedRole] = useState('');
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const SearchPanel = ({ placeholder, pageType, buttonText }) => {
         />
 
         {shouldShowButton() && (
-            <button className="add-button">
+            <button className="add-button" onClick={onAddClick}>
             <span className="add-icon"><AddCircleOutlineIcon /></span>
             {' '}{buttonText}
             </button>

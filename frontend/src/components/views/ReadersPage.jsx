@@ -8,6 +8,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import SearchPanel from '../search/SearchPanel';
 import IconButton from '@mui/material/IconButton';
 import ViewReaderModal from '../modals/ViewReaderModal';
+import AddReaderModal from '../modals/AddReaderModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -16,10 +17,41 @@ const ReadersPage = () => {
   const [decodedRole, setDecodedRole] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedUser(row);
     setModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+     setShowAddModal(true);
+  };
+
+  const fetchReaders = async () => {
+     try {
+       const authToken = localStorage.getItem('authToken');
+
+       const response = await fetch('http://localhost:8080/readers/all', {
+         method: 'GET',
+         headers: {
+            'Authorization': `Bearer ${authToken}`,
+         },
+        });
+  
+       if (!response.ok) throw new Error(`Ошибка загрузки читателей.`);
+  
+       const data = await response.json();
+  
+       const transformedData = data.map((item) => ({
+         ...item,
+         id: item.reader_id,
+       }));
+  
+       setReaderData(transformedData);
+     } catch (err) {
+       console.error("Ошибка загрузки читателей:", err);
+     }
   };
 
   useEffect(() => {
@@ -73,6 +105,10 @@ const ReadersPage = () => {
     fetchReaders();
   }, []);
 
+  const refreshReaders = () => {
+    fetchReaders();
+  };
+
   const readerColumns = [
     { field: 'id', headerName: 'ID', flex: 0.1 },
     {
@@ -107,7 +143,6 @@ const ReadersPage = () => {
             height: '100%',
             cursor: 'pointer',
           }}
-          onClick={() => handleRowClick(params.row)}
           >
             { decodedRole === 'Библиотекарь' ? (
               <>
@@ -136,9 +171,10 @@ const ReadersPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="readers" buttonText="Добавить"/>
+        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="readers" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={readerColumns} rows={readerData} />
         <ViewReaderModal open={modalOpen} handleClose={() => setModalOpen(false)} readerData={selectedUser} />
+        <AddReaderModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshReaders} />
       </div>
     </div>
   );
