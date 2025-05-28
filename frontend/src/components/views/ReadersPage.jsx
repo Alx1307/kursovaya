@@ -11,6 +11,7 @@ import ViewReaderModal from '../modals/ViewReaderModal';
 import AddReaderModal from '../modals/AddReaderModal';
 import ConfirmDeleteReaderModal from '../modals/ConfirmDeleteReaderModal';
 import ReaderIssuesModal from '../modals/ReaderIssuesModal';
+import EditReaderModal from '../modals/EditReaderModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -24,6 +25,7 @@ const ReadersPage = () => {
   const [readerToDelete, setReaderToDelete] = useState(null);
   const [issuesModalOpen, setIssuesModalOpen] = useState(false);
   const [issuesList, setIssuesList] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedUser(row);
@@ -49,6 +51,11 @@ const ReadersPage = () => {
     setIssuesModalOpen(false);
     setSelectedUser(null);
     setIssuesList([]);
+  };
+
+  const handleEditClick = (readerId) => {
+    setSelectedUser(readerId);
+    setEditModalOpen(true);
   };
 
   const deleteReader = async () => {
@@ -209,7 +216,7 @@ const ReadersPage = () => {
           >
             { decodedRole === 'Библиотекарь' ? (
               <>
-                <IconButton className="IconButton" >
+                <IconButton className="IconButton" onClick={() => handleEditClick(params.row)}>
                   <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
                 </IconButton>
                 <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
@@ -240,6 +247,7 @@ const ReadersPage = () => {
         <AddReaderModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshReaders} />
         <ConfirmDeleteReaderModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteReader} />
         <ReaderIssuesModal issuesList={issuesList} open={issuesModalOpen} handleClose={handleCloseIssuesModal}/>
+        <EditReaderModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} readerData={selectedUser} reloadReaderData={refreshReaders}/>
       </div>
     </div>
   );
