@@ -105,6 +105,7 @@ const AddReaderModal = ({ open, handleClose, onSuccess }) => {
                 <label className="add-modal-label">Дата рождения:</label>
                 <TextField
                     className="add-modal-textfield"
+                    type='date'
                     InputLabelProps={{ shrink: true }}
                     fullWidth
                     name='birth_date'

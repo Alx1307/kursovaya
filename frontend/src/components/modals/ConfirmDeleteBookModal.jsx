@@ -14,7 +14,7 @@ const ConfirmDeleteBookModal = ({ open, handleClose, handleConfirm }) => {
                 </div>
                 <div style={{ flexGrow: 1, textAlign: 'center' }}>
                     <Typography variant="h6" component="div" className="delete-book-modal-title">
-                        Подтверждение удаления книги
+                        Подтверждение
                     </Typography>
                 </div>
                 <div>

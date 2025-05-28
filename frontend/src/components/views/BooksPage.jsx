@@ -9,6 +9,7 @@ import SearchPanel from '../search/SearchPanel';
 import ViewBookModal from '../modals/ViewBookModal';
 import IconButton from '@mui/material/IconButton';
 import ConfirmDeleteBookModal from '../modals/ConfirmDeleteBookModal';
+import EditBookModal from '../modals/EditBookModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -19,6 +20,7 @@ const BooksPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedBook(row);
@@ -28,6 +30,11 @@ const BooksPage = () => {
   const handleDeleteClick = (bookId) => {
     setBookToDelete(bookId);
     setDeleteModalOpen(true);
+  };
+
+  const handleEditOpen = (bookId) => {
+    setSelectedBook(bookId);
+    setEditModalOpen(true);
   };
 
   const deleteBook = async () => {
@@ -191,7 +198,9 @@ const BooksPage = () => {
           {
             decodedRole === 'Библиограф' &&
             (<>
-              <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
+              <IconButton className="IconButton" onClick={() => handleEditOpen(params.row)}>
+                  <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
+              </IconButton>
               <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
                   <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
               </IconButton>
@@ -215,6 +224,7 @@ const BooksPage = () => {
         <TableComponent columns={booksColumns} rows={booksData} />
         <ViewBookModal open={modalOpen} handleClose={() => setModalOpen(false)} bookData={selectedBook} />
         <ConfirmDeleteBookModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteBook} />
+        <EditBookModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} bookData={selectedBook} reloadBookData={refreshBooks}/>
       </div>
     </div>
   );

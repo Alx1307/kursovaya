@@ -14,7 +14,7 @@ const ConfirmDeleteReaderModal = ({ open, handleClose, handleConfirm }) => {
                 </div>
                 <div style={{ flexGrow: 1, textAlign: 'center' }}>
                     <Typography variant="h6" component="div" className="delete-reader-modal-title">
-                        Подтверждение удаления читателя
+                        Подтверждение
                     </Typography>
                 </div>
                 <div>
