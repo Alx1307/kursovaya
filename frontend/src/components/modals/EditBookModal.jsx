@@ -7,12 +7,14 @@ import './styles/EditBookModal.css';
 const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
     const initialValues = {
         title: bookData?.title || '',
-        authors: bookData?.authors || '',
+        surname: bookData?.authorsArray && bookData.authorsArray.length > 0 ? bookData.authorsArray[0].surname : '',
+        name: bookData?.authorsArray && bookData.authorsArray.length > 0 ? bookData.authorsArray[0].name : '',
+        patronymic: bookData?.authorsArray && bookData.authorsArray.length > 0 ? bookData.authorsArray[0].patronymic : '',
         publish_year: bookData?.publish_year || '',
         isbn: bookData?.isbn || '',
         code: bookData?.code || '',
         date_added: bookData?.date_added ? new Date(bookData.date_added).toISOString().split("T")[0] : "",
-        available_quantity: bookData?.available_quantity || ''
+        quantity: bookData?.quantity || ''
     };
 
     const [formValues, setFormValues] = useState(initialValues);
@@ -23,9 +25,23 @@ const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
 
     const handleSubmit = async () => {
         try {
-            const editedData = formValues;
             const book_id = bookData.book_id;
             const authToken = localStorage.getItem('authToken');
+
+            const newAuthor = {
+                surname: formValues.surname,
+                name: formValues.name,
+                patronymic: formValues.patronymic
+            };
+
+            const editedData = {
+                title: formValues.title,
+                publish_year: formValues.publish_year,
+                isbn: formValues.isbn,
+                code: formValues.code,
+                quantity: formValues.quantity,
+                authorsArray: [newAuthor]
+            };
 
             const response = await fetch(`http://localhost:8080/books/edit/${book_id}`, {
                 method: 'PATCH',
@@ -88,13 +104,35 @@ const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
                 </div>
 
                 <div className="edit-modal-row">
-                <label className="edit-modal-label">Авторы:</label>
+                <label className="edit-modal-label">Фамилия автора:</label>
                 <TextField
                     className="edit-modal-textfield"
-                    value={formValues.authors || ""}
+                    value={formValues.surname || ""}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, authors: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, surname: e.target.value }))}
+                />
+                </div>
+
+                <div className="edit-modal-row">
+                <label className="edit-modal-label">Имя автора:</label>
+                <TextField
+                    className="edit-modal-textfield"
+                    value={formValues.name || ""}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    onChange={(e) => setFormValues(prev => ({ ...prev, name: e.target.value }))}
+                />
+                </div>
+
+                <div className="edit-modal-row">
+                <label className="edit-modal-label">Отчество автора:</label>
+                <TextField
+                    className="edit-modal-textfield"
+                    value={formValues.patronymic || ""}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    onChange={(e) => setFormValues(prev => ({ ...prev, patronymic: e.target.value }))}
                 />
                 </div>
 
@@ -121,13 +159,13 @@ const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
                 </div>
 
                 <div className="edit-modal-row">
-                <label className="edit-modal-label">Количество свободных экземпляров:</label>
+                <label className="edit-modal-label">Количество экземпляров:</label>
                 <TextField
                     className="edit-modal-textfield"
-                    value={formValues.available_quantity || ""}
+                    value={formValues.quantity || ""}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, available_quantity: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, quantity: e.target.value }))}
                 />
                 </div>
 

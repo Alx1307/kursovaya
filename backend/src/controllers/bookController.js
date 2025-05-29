@@ -120,6 +120,11 @@ class BookController {
 
             const result = {
                 ...book.toJSON(),
+                authorsArray: authors.map((author) => ({
+                    surname: author.surname,
+                    name: author.name,
+                    patronymic: author.patronymic
+                })),
                 authors: allAuthors,
                 available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
             };
@@ -175,6 +180,11 @@ class BookController {
 
                 const bookInfo = {
                     ...book.toJSON(),
+                    authorsArray: authors.map((author) => ({
+                        surname: author.surname,
+                        name: author.name,
+                        patronymic: author.patronymic
+                    })),
                     authors: allAuthors,
                     available: availableQuantity,
                     available_quantity: `${Math.max(availableQuantity, 0)}/${book.quantity}`,
@@ -190,6 +200,24 @@ class BookController {
         }
     }
 
+    async createOrFindAuthor(attributes) {
+        const { surname, name, patronymic } = attributes;
+    
+        const searchParams = { surname, name };
+        if (patronymic) {
+            searchParams.patronymic = patronymic;
+        }
+    
+        let existingAuthor = await this.Author.findOne({ where: searchParams });
+    
+        if (existingAuthor) {
+            return existingAuthor.author_id;
+        }
+    
+        const newAuthor = await this.Author.create(attributes);
+        return newAuthor.author_id;
+    }
+    
     async editBook(req, res) {
         try {
             if (req.userData.role !== 'Библиограф') {
@@ -197,7 +225,7 @@ class BookController {
             }
     
             const { book_id } = req.params;
-            const { title, publish_year, isbn, code, quantity, authors } = req.body;
+            const { title, publish_year, isbn, code, quantity, authorsArray } = req.body;
     
             const book = await this.Book.findByPk(book_id);
             if (!book) {
@@ -212,29 +240,19 @@ class BookController {
                 quantity
             });
     
-            if (authors && Array.isArray(authors)) {
+            if (authorsArray && Array.isArray(authorsArray)) {
                 await this.BookAuthor.destroy({ where: { book_id: book_id } });
     
-                for (let i = 0; i < authors.length; i++) {
-                    const currentAuthor = authors[i];
+                for (let i = 0; i < authorsArray.length; i++) {
+                    const currentAuthor = authorsArray[i];
                     
                     if (!currentAuthor.surname || !currentAuthor.name) {
                         continue;
                     }
     
-                    let searchParams = { surname: currentAuthor.surname, name: currentAuthor.name };
-                    if (currentAuthor.patronymic) {
-                        searchParams.patronymic = currentAuthor.patronymic;
-                    }
+                    const authorId = await this.createOrFindAuthor(currentAuthor);
     
-                    let existingAuthor = await this.Author.findOne({ where: searchParams });
-    
-                    if (existingAuthor) {
-                        await this.BookAuthor.create({ book_id: book_id, author_id: existingAuthor.author_id });
-                    } else {
-                        const newAuthor = await this.Author.create(currentAuthor);
-                        await this.BookAuthor.create({ book_id: book_id, author_id: newAuthor.author_id });
-                    }
+                    await this.BookAuthor.create({ book_id: book_id, author_id: authorId });
                 }
             }
     
