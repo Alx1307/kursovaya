@@ -10,6 +10,7 @@ import ViewBookModal from '../modals/ViewBookModal';
 import IconButton from '@mui/material/IconButton';
 import ConfirmDeleteBookModal from '../modals/ConfirmDeleteBookModal';
 import EditBookModal from '../modals/EditBookModal';
+import AddBookModal from '../modals/AddBookModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -21,6 +22,7 @@ const BooksPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedBook(row);
@@ -35,6 +37,10 @@ const BooksPage = () => {
   const handleEditOpen = (bookId) => {
     setSelectedBook(bookId);
     setEditModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setShowAddModal(true);
   };
 
   const deleteBook = async () => {
@@ -220,9 +226,10 @@ const BooksPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить"/>
+        <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={booksColumns} rows={booksData} />
         <ViewBookModal open={modalOpen} handleClose={() => setModalOpen(false)} bookData={selectedBook} />
+        <AddBookModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshBooks} />
         <ConfirmDeleteBookModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteBook} />
         <EditBookModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} bookData={selectedBook} reloadBookData={refreshBooks}/>
       </div>
