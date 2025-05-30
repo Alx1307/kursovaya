@@ -6,6 +6,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchPanel from '../search/SearchPanel';
 import ViewIssueModal from '../modals/ViewIssueModal';
+import AddIssueModal from '../modals/AddIssueModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -14,10 +15,48 @@ const IssuePage = () => {
   const [decodedRole, setDecodedRole] = useState('');
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  
 
   const handleRowClick = (row) => {
     setSelectedIssue(row);
     setModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setShowAddModal(true);
+  };
+
+  const fetchIssues = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+
+      const response = await fetch('http://localhost:8080/issues/all', { 
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Ошибка загрузки выданных книг.');
+
+      const data = await response.json();
+
+      const transformedData = data.map(item => ({
+        ...item,
+        id: item.issue_id,
+      }));
+
+      console.log(transformedData);
+
+      setIssueData(transformedData);
+    } catch (err) {
+      console.error('Ошибка загрузки выданных книг:', err);
+    }
+  };
+
+  const refreshIssues = () => {
+    fetchIssues();
   };
 
   useEffect(() => {
@@ -149,9 +188,10 @@ const IssuePage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать"/>
+        <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать" onAddClick={handleAddClick}/>
         <TableComponent columns={issueColumns} rows={issueData} />
         <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
+        <AddIssueModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshIssues} />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import ConfirmDeleteBookModal from '../modals/ConfirmDeleteBookModal';
 import EditBookModal from '../modals/EditBookModal';
 import AddBookModal from '../modals/AddBookModal';
+import AddIssueModal from '../modals/AddIssueModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -23,6 +24,8 @@ const BooksPage = () => {
   const [bookToDelete, setBookToDelete] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
+  const [bookToIssue, setBookToIssue] = useState(null);
 
   const handleRowClick = (row) => {
     setSelectedBook(row);
@@ -41,6 +44,19 @@ const BooksPage = () => {
 
   const handleAddClick = () => {
     setShowAddModal(true);
+  };
+
+  const handleOpenIssueModal = (bookId) => {
+    console.log('ID: ', bookId);
+    console.log('BookToIssue: ', bookToIssue);
+    setBookToIssue(bookId);
+    console.log('BookToIssue: ', bookToIssue);
+    setIsIssueModalOpen(true);
+  };
+
+  const handleCloseIssueModal = () => {
+    setBookToIssue(null)
+    setIsIssueModalOpen(false);
   };
 
   const deleteBook = async () => {
@@ -188,10 +204,10 @@ const BooksPage = () => {
     },
   ];
 
-  if (decodedRole !== 'Администратор') {
+  if (decodedRole == 'Библиограф') {
     booksColumns.push({
       field: 'actions',
-      headerName: decodedRole === 'Библиотекарь' ? 'Выдать' : '',
+      headerName: '', //decodedRole === 'Библиотекарь' ? 'Выдать' : '',
       flex: 0.1,
       renderCell: (params) => (
         <div style={{
@@ -212,10 +228,12 @@ const BooksPage = () => {
               </IconButton>
             </>)
           }
-          {
+          {/* {
             decodedRole !== 'Библиограф' &&
-            <ArrowCircleRightIcon style={{ color: 'black', width: 25, height: 25 }} />
-          }
+            <IconButton className="IconButton" onClick={() => handleOpenIssueModal(params.row.id)}>
+                  <ArrowCircleRightIcon style={{ color: 'black', width: 25, height: 25 }} />
+            </IconButton>
+          } */}
         </div>
       ),
     });
@@ -232,6 +250,7 @@ const BooksPage = () => {
         <AddBookModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshBooks} />
         <ConfirmDeleteBookModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteBook} />
         <EditBookModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} bookData={selectedBook} reloadBookData={refreshBooks}/>
+        <AddIssueModal open={isIssueModalOpen} handleClose={handleCloseIssueModal} initialBookId={bookToIssue}/>
       </div>
     </div>
   );
