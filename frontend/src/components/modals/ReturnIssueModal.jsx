@@ -2,17 +2,11 @@ import React, {useState, useEffect} from 'react';
 import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select, MenuItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import './styles/EditIssueModal.css';
+import './styles/ReturnIssueModal.css';
 
-const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
-    function transformDate(date) {
-        if (!date) return '';
-        const parts = date.split('.');
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
-
+const ReturnIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
     const initialValue = {
-        return_date: issueData?.return_date ? transformDate(issueData.return_date) : ''
+        comment: issueData?.comment || ''
     };
 
     const [formValues, setFormValues] = useState(initialValue);
@@ -27,7 +21,8 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
           const issue_id = issueData.issue_id;
 
           const editedValue = {
-            return_date: formValues.return_date
+            comment: formValues.comment,
+            status: "Возвращена"
           };
           
           const response = await fetch(`http://localhost:8080/issues/edit/${issue_id}`, {
@@ -40,14 +35,15 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
           });
     
           if (response.status === 200) {
-            alert('Дата возврата успешно изменена!');
+            alert('Книга успешно возвращена!');
             handleClose();
             reloadIssueData();
           } else {
-            alert('Ошибка при изменении даты возврата.');
+            alert('Ошибка при возврате книги.');
           }
         } catch (err) {
-          console.error('Ошибка при изменении даты возврата:', err.response?.data || err.message);
+          console.log('Передаваемые данные:', formValues);
+          console.error('Ошибка при возврате книги:', err.response?.data || err.message);
         }
     };
 
@@ -58,14 +54,14 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
 
     return (
         <Modal open={open} onClose={handleClose}>
-        <Box className="edit-issue-modal">
-            <div className="edit-issue-modal-header">
-            <div className="edit-issue-modal-icon-container">
+        <Box className="return-issue-modal">
+            <div className="return-issue-modal-header">
+            <div className="return-issue-modal-icon-container">
                 <LibraryBooksIcon style={{ color: '#000', fontSize: '30px' }} />
             </div>
             <div style={{ flexGrow: 1, textAlign: 'center' }}>
-                <Typography variant="h6" component="div" className="edit-issue-modal-title">
-                Изменение даты возврата
+                <Typography variant="h6" component="div" className="return-issue-modal-title">
+                Возврат книги
                 </Typography>
             </div>
             <div>
@@ -76,21 +72,20 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
             </div>
             <Divider style={{ backgroundColor: '#A44A3F', height: '1px' }} />
             
-            <div className="edit-issue-modal-info-section">
-                <div className="edit-modal-row">
-                <label className="edit-modal-label">Дата возврата:</label>
+            <div className="return-issue-modal-info-section">
+                <div className="return-modal-row">
+                <label className="return-modal-label">Комментарий:</label>
                 <TextField
-                    className="edit-modal-textfield"
-                    type='date'
+                    className="return-modal-textfield"
+                    name='comment'
+                    value={formValues.comment || ""}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    name='return_date'
-                    value={formValues.return_date}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, return_date: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, comment: e.target.value }))}
                 />
                 </div>
 
-                <div className='edit-issue-button-container'>
+                <div className='return-issue-button-container'>
                     <Button variant="outlined"
                         style={{ backgroundColor: 'rgba(167, 109, 96, 0.7)', color: '#000', fontWeight: 'bold', fontSize: '16px', width: '260px', height: '54px', borderRadius: '10px', outline: 'none !important', boxShadow: 'none !important' }}
                         onClick={handleCancel}>
@@ -99,7 +94,7 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
                     <Button variant="contained"
                         style={{ backgroundColor: '#618D4A', color: '#fff', fontWeight: 'bold', fontSize: '16px', width: '260px', height: '54px', borderRadius: '10px', outline: 'none !important', boxShadow: 'none !important' }}
                         onClick={handleSubmit}>
-                        Сохранить
+                        Принять
                     </Button>
                 </div>
             </div>
@@ -108,4 +103,4 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
     );
 };
 
-export default EditIssueModal;
+export default ReturnIssueModal;

@@ -9,6 +9,7 @@ import ViewIssueModal from '../modals/ViewIssueModal';
 import AddIssueModal from '../modals/AddIssueModal';
 import EditIssueModal from '../modals/EditIssueModal';
 import IconButton from '@mui/material/IconButton';
+import ReturnIssueModal from '../modals/ReturnIssueModal';
 import axios from 'axios';
 import './Pages.css';
 
@@ -19,6 +20,7 @@ const IssuePage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedIssue(row);
@@ -32,6 +34,11 @@ const IssuePage = () => {
   const handleEditOpen = (issueId) => {
     setSelectedIssue(issueId);
     setEditModalOpen(true);
+  };
+
+  const handleReturnOpen = (issueId) => {
+    setSelectedIssue(issueId);
+    setReturnModalOpen(true);
   };
 
   const fetchIssues = async () => {
@@ -175,20 +182,22 @@ const IssuePage = () => {
 
   if (decodedRole === 'Библиотекарь') {
     issueColumns.push({
-      field: 'return',
-      headerName: 'Принять',
-      renderCell: () => (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 5,
-          height: '100%',
-        }}>
-          <ArrowCircleLeftIcon style={{ color: 'black', width: 25, height: 25 }} />
-        </div>
-      ),
-      flex: 0.1,
+        field: 'return',
+        headerName: 'Принять',
+        renderCell: (params) => params.row.status !== 'Возвращена' ? (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 5,
+                height: '100%',
+            }}>
+                <IconButton className="IconButton" onClick={() => handleReturnOpen(params.row)}>
+                    <ArrowCircleLeftIcon style={{ color: 'black', width: 25, height: 25 }} />
+                </IconButton>
+            </div>
+        ) : null,
+        flex: 0.1,
     });
   }
 
@@ -202,6 +211,7 @@ const IssuePage = () => {
         <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
         <AddIssueModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshIssues} />
         <EditIssueModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} issueData={selectedIssue} reloadIssueData={refreshIssues}/>
+        <ReturnIssueModal open={returnModalOpen} handleClose={() => setReturnModalOpen(false)} issueData={selectedIssue} reloadIssueData={refreshIssues} />
       </div>
     </div>
   );
