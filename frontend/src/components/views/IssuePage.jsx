@@ -173,8 +173,17 @@ const IssuePage = () => {
       flex: 0.15,
       renderCell: (params) => {
         const isOverdue = params.row.status === 'Просрочена';
+        const isReturned = params.row.status === 'Возвращена';
+        let style = { fontWeight: 'normal', color: 'black' };
+        if (isOverdue) {
+          style = { fontWeight: 'bold', color: '#A44A3F', fontSize: '16px' };
+        } else if (isReturned) {
+          style = { fontWeight: 'bold', color: 'green', fontSize: '16px' };
+        }
         return (
-          <span style={{ fontWeight: isOverdue ? 'bold' : 'normal', color: isOverdue ? '#A44A3F' : 'black', fontSize: isOverdue ? '18px' : '' }}>{params.row.status}</span>
+          <span style={style}>
+            {params.row.status}
+          </span>
         );
       },
     },

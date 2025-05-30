@@ -61,3 +61,19 @@
     box-shadow: none !important;
     outline: none;
 }
+
+.search-button {
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 50px;
+    background-color: #A44A3F;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    outline: none !important;
+}

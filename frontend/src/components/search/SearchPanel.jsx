@@ -46,11 +46,31 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
 
     return (
         <div className="search-panel">
-        <input 
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <input 
             type="text" 
             placeholder={placeholder} 
-            className="search-input"
-        />
+            className="search-input" 
+            style={{ paddingLeft: '30px' }} 
+          />
+          <SearchIcon style={{
+            position: 'absolute',
+            left: '8px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: '#aaa',
+            pointerEvents: 'none',
+            fontSize: '20px',
+          }} />
+          <button 
+            className='search-button'
+            variant="contained" 
+            style={{ marginLeft: '10px', height: '40px' }} 
+            onClick={() => console.log('Найти нажато')}
+          >
+            Найти
+          </button>
+        </div>
 
         {shouldShowButton() && (
             <button className="add-button" onClick={onAddClick}>
