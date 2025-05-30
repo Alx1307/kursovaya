@@ -141,6 +141,10 @@ class IssueController {
                 if (today > returnDate && issue.status === 'Выдана') {
                     await issue.update({ status: 'Просрочена' });
                 }
+
+                if (today <= returnDate && issue.status === 'Просрочена') {
+                    await issue.update({ status: 'Выдана' });
+                }
     
                 const book = await this.Book.findByPk(issue.book_id, {
                     attributes: ['code']
@@ -178,7 +182,6 @@ class IssueController {
             }
     
             const { issue_id } = req.params;
-            const { book_id, reader_id, return_date, status, comment } = req.body;
     
             if (!issue_id) {
                 return res.status(400).send('Некорректный идентификатор выдачи.');
@@ -190,21 +193,41 @@ class IssueController {
                 return res.status(404).send('Выдача не найдена.');
             }
     
-            if (book_id && !(await Book.findByPk(book_id))) {
-                return res.status(404).send('Указанная книга не найдена.');
+            const updatedData = {};
+    
+            if (req.body.book_id) {
+                const bookExists = await Book.findByPk(req.body.book_id);
+                if (!bookExists) {
+                    return res.status(404).send('Указанная книга не найдена.');
+                }
+                updatedData.book_id = req.body.book_id;
             }
     
-            if (reader_id && !(await Reader.findByPk(reader_id))) {
-                return res.status(404).send('Указанный читатель не найден.');
+            if (req.body.reader_id) {
+                const readerExists = await Reader.findByPk(req.body.reader_id);
+                if (!readerExists) {
+                    return res.status(404).send('Указанный читатель не найден.');
+                }
+                updatedData.reader_id = req.body.reader_id;
             }
     
-            await existingIssue.update({
-                book_id: book_id || existingIssue.book_id,
-                reader_id: reader_id || existingIssue.reader_id,
-                return_date: return_date || existingIssue.return_date,
-                status: status || existingIssue.status,
-                comment: comment || existingIssue.comment
+            if (req.body.return_date) {
+                updatedData.return_date = req.body.return_date;
+            }
+    
+            if (req.body.status) {
+                updatedData.status = req.body.status;
+            }
+    
+            if (req.body.comment) {
+                updatedData.comment = req.body.comment;
+            }
+    
+            Object.keys(updatedData).forEach(key => {
+                existingIssue[key] = updatedData[key];
             });
+    
+            await existingIssue.save();
     
             return res.status(200).send('Выдача успешно обновлена.');
         } catch (err) {

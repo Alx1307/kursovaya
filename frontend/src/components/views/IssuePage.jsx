@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchPanel from '../search/SearchPanel';
 import ViewIssueModal from '../modals/ViewIssueModal';
 import AddIssueModal from '../modals/AddIssueModal';
+import EditIssueModal from '../modals/EditIssueModal';
+import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 import './Pages.css';
 
@@ -16,7 +18,7 @@ const IssuePage = () => {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleRowClick = (row) => {
     setSelectedIssue(row);
@@ -25,6 +27,11 @@ const IssuePage = () => {
 
   const handleAddClick = () => {
     setShowAddModal(true);
+  };
+
+  const handleEditOpen = (issueId) => {
+    setSelectedIssue(issueId);
+    setEditModalOpen(true);
   };
 
   const fetchIssues = async () => {
@@ -146,7 +153,9 @@ const IssuePage = () => {
             }}>
             {params.value}
             { decodedRole === 'Библиотекарь' && (
-            <EditIcon style={{ color: 'black', width: 25, height: 25, marginLeft: '5px' }} />
+              <IconButton className="IconButton" onClick={() => handleEditOpen(params.row)}>
+                <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
+              </IconButton>
           )}
           </div>
         ),
@@ -192,6 +201,7 @@ const IssuePage = () => {
         <TableComponent columns={issueColumns} rows={issueData} />
         <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
         <AddIssueModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshIssues} />
+        <EditIssueModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} issueData={selectedIssue} reloadIssueData={refreshIssues}/>
       </div>
     </div>
   );

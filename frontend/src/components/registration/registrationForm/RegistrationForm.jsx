@@ -10,6 +10,7 @@ const RegistrationForm = () => {
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [selectedRole, setSelectedRole] = useState('Администратор');
 
     const handleSubmit = async (event) => {
@@ -37,16 +38,16 @@ const RegistrationForm = () => {
             <h1 className="title">Регистрация</h1>
             <p className="subtitle">Введите ваши данные для регистрации</p>
             <form onSubmit={handleSubmit}>
-                <input
+                {/* <input
                     type="text"
                     placeholder="ФИО"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
                     required
                     className="form-input"
-                />
+                /> */}
 
-                <select
+                {/* <select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value)}
                     required
@@ -55,7 +56,7 @@ const RegistrationForm = () => {
                     <option value="Администратор">Администратор</option>
                     <option value="Библиотекарь">Библиотекарь</option>
                     <option value="Библиограф">Библиограф</option>
-                </select>
+                </select> */}
 
                 <input
                     type="email"
@@ -68,6 +69,14 @@ const RegistrationForm = () => {
                 <input
                     type="password"
                     placeholder="Пароль"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="form-input"
+                />
+                <input
+                    type="password"
+                    placeholder="Подтверждение пароля"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
