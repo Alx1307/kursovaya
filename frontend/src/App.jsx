@@ -9,6 +9,7 @@ import BooksPage from './components/views/BooksPage';
 import ReadersPage from './components/views/ReadersPage';
 import HallsPage from './components/views/HallsPage';
 import PrivateRoute from './routes/PrivateRoutes';
+import LibrariansPage from './components/views/LibrariansPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -55,6 +56,11 @@ function App() {
         <Route path="/halls" element={
           <PrivateRoute>
             <HallsPage />
+          </PrivateRoute>
+        } />
+        <Route path="/librarians" element={
+          <PrivateRoute>
+            <LibrariansPage />
           </PrivateRoute>
         } />
       </Routes>

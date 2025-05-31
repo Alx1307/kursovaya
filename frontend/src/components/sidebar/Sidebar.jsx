@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import logoImage from '../../assets/white_book_comp.png';
@@ -8,6 +8,8 @@ import BookIcon from '@mui/icons-material/Book';
 import LocalLibrary from '@mui/icons-material/LocalLibrary';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import axios from 'axios';
 
 const menuItems = [
     { icon: HomeIcon, title: 'Главная', link: '/main' },
@@ -17,7 +19,36 @@ const menuItems = [
     { icon: MeetingRoomIcon, title: 'Залы', link: '/halls' },
 ];
 
+const adminMenuItem = [
+    {icon: PeopleAltIcon, title: 'Сотрудники', link: '/librarians'},
+];
+
 const Sidebar = () => { 
+    const [decodedRole, setDecodedRole] = useState('');
+
+    useEffect(() => {
+        const fetchUserRole = async () => {
+          try {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) return;
+    
+            const config = {
+              headers: {
+                'Authorization': `Bearer ${authToken}`
+              }
+            };
+    
+            const response = await axios.get('http://localhost:8080/librarian/data', config);
+            const userData = response.data;
+            setDecodedRole(userData.role);
+          } catch (err) {
+            console.error('Ошибка при получении роли:', err.message);
+          }
+        };
+    
+        fetchUserRole();
+    }, []);
+
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -37,8 +68,15 @@ const Sidebar = () => {
                 {menuItems.map(({ icon: Icon, title, link }, index) => (
                     <li key={index} className="menu-item">
                         <NavLink to={link} className="nav-link" activeclassname="active">
-                            <Icon fontSize="medium" />
-                            {title}
+                            <Icon fontSize="medium" />{title}
+                        </NavLink>
+                    </li>
+                ))}
+
+                {decodedRole === 'Администратор' && adminMenuItem.map(({ icon: Icon, title, link }, index) => (
+                    <li key={index} className="menu-item">
+                        <NavLink to={link} className="nav-link" activeClassName="active">
+                            <Icon fontSize="medium" />{title}
                         </NavLink>
                     </li>
                 ))}

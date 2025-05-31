@@ -35,7 +35,7 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
             case 'issue':
             case 'readers':
                 return decodedRole === 'Библиотекарь';
-            case 'employees':
+            case 'librarians':
                 return decodedRole === 'Администратор';
             case 'books':
                 return decodedRole === 'Библиограф';
