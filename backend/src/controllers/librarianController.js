@@ -9,6 +9,30 @@ class LibrarianController {
         this.Librarian = LibrarianModel;
     }
 
+    async addLibrarian(req, res) {
+        const { email, role } = req.body;
+
+        try {
+            if (req.userData.role !== 'Администратор') {
+                return res.status(403).send('Доступ запрещен.');
+            }
+
+            const existingUser = await Librarian.findOne({ where: {email} });
+
+            if (existingUser) {
+                return res.status(409).send('E-mail уже зарегистрирован.');
+            }
+
+            const librarian = new Librarian({ email, role });
+            await librarian.save();
+
+            return res.status(201).send('Новый сотрудник успешно добавлен.');
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send(err.message);
+        }
+    }
+
     async registerLibrarian(req, res) {
         const { full_name, email, password, role } = req.body;
         

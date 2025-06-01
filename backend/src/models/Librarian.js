@@ -11,7 +11,7 @@ const Librarian = sequelize.define('Librarian', {
     },
     full_name: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING(30),
@@ -31,7 +31,7 @@ const Librarian = sequelize.define('Librarian', {
     },
     password: {
         type: DataTypes.STRING(20),
-        allowNull: false,
+        allowNull: true,
         validate: {
             // len: [8, 20],
             // correct_password(value) {

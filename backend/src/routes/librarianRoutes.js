@@ -8,6 +8,7 @@ const controller = new LibrarianController(Librarian);
 
 router.post('/register', controller.registerLibrarian.bind(controller));
 router.post('/login', controller.loginLibrarian.bind(controller));
+router.post('/add', authMiddleware, controller.addLibrarian.bind(controller));
 
 router.get('/librarian/get/:librarian_id', authMiddleware, controller.getLibrarianData.bind(controller));
 router.get('/librarian/all', authMiddleware, controller.getAllLibrariansData.bind(controller));
