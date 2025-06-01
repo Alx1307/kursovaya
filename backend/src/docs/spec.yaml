@@ -22,9 +22,78 @@ tags:
     description: Управление вадачами книг читателям билиотеки
 
 paths:
-  /register:
+  /add:
     post:
-      summary: Регистрация библиотекаря
+      summary: Добавление нового сотрудника администратором
+      tags:
+        - Регистрация
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Электронная почта нового сотрудника
+                  example: new_librarian@example.com
+                role:
+                  type: string
+                  description: Роль нового сотрудника (библиотекарь, администратор и библиограф)
+                  example: Библиотекарь
+      responses:
+        '201':
+          description: Новый сотрудник успешно добавлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Сообщение успеха
+                    example: Новый сотрудник успешно добавлен
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Причина отказа
+                    example: Доступ запрещен
+        '409':
+          description: E-mail уже зарегистрирован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Информация об ошибке
+                    example: E-mail уже зарегистрирован
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Сообщение об ошибке
+                    example: Произошла внутренняя ошибка сервера
+
+  /register:
+    patch:
+      summary: Завершение регистрации сотрудника
       tags:
         - Регистрация
       requestBody:
@@ -40,16 +109,16 @@ paths:
                 email:
                   type: string
                   format: email
-                  description: Адрес электронной почты библиотекаря
-                  example: ivan.petrov@example.com
+                  description: Адрес электронной почты сотрудника
+                  example: ivanova@example.com
                 password:
                   type: string
                   format: password
-                  description: Пароль библиотекаря
+                  description: Пароль сотрудника
                   example: SecureP@ssword123
       responses:
-        '201':
-          description: Библиотекарь успешно зарегистрирован
+        '200':
+          description: Сотрудник успешно прошёл этап регистрации
           content:
             application/json:
               schema:
@@ -58,9 +127,9 @@ paths:
                   message:
                     type: string
                     description: Сообщение успеха
-                    example: Библиотекарь успешно зарегистрирован
+                    example: Сотрудник успешно зарегистрирован
         '400':
-          description: Некорректные входные данные
+          description: Сотрудник уже завершил регистрацию
           content:
             application/json:
               schema:
@@ -68,8 +137,19 @@ paths:
                 properties:
                   error:
                     type: string
-                    description: Описание ошибки
-                    example: Некорректный формат ввода
+                    description: Ошибка регистрации
+                    example: Данный пользователь уже завершил регистрацию
+        '404':
+          description: Сотрудника с указанным email не найдено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка регистрации
+                    example: Сотрудник с указанным email не найден
         '500':
           description: Внутренняя ошибка сервера
           content:

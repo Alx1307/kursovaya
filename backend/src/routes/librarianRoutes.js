@@ -6,7 +6,6 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const controller = new LibrarianController(Librarian);
 
-router.post('/register', controller.registerLibrarian.bind(controller));
 router.post('/login', controller.loginLibrarian.bind(controller));
 router.post('/add', authMiddleware, controller.addLibrarian.bind(controller));
 
@@ -17,5 +16,6 @@ router.get('/librarian/data', authMiddleware, controller.getLibrarianTokenData.b
 router.delete('/librarian/delete/:librarian_id', authMiddleware, controller.deleteLibrarian.bind(controller));
 
 router.patch('/librarian/edit/:librarian_id', authMiddleware, controller.editLibrarianData.bind(controller));
+router.patch('/register', controller.registerLibrarian.bind(controller));
 
 module.exports = router;

@@ -34,15 +34,24 @@ class LibrarianController {
     }
 
     async registerLibrarian(req, res) {
-        const { full_name, email, password, role } = req.body;
+        const { full_name, email, password } = req.body;
         
         try {
+            let librarian = await Librarian.findOne({ where: { email } });
+
+            if (!librarian) {
+                return res.status(404).send('Сотрудник с указанным email не найден');
+            }
+
+            if (librarian.full_name !== null && librarian.password !== null) {
+                return res.status(400).send('Данный пользователь уже завершил регистрацию');
+            }
+
             const hashedPassword = await bcrypt.hash(password, 10);
     
-            const librarian = new Librarian({full_name, email, password: hashedPassword, role});
-            await librarian.save();
+            await librarian.update({ full_name, password: hashedPassword });
     
-            res.status(201).send('Библиотекарь успешно зарегистрирован.');
+            res.status(200).send('Сотрудник успешно зарегистрирован.');
         } catch (err) {
             res.status(500).send(err.message);
         }

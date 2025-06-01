@@ -73,3 +73,15 @@
 .form-select:focus {
     outline: 1px solid #8E3D31;
 }
+
+.error-border {
+    border-color: #AD0000;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+.error-message {
+    display: block;
+    color: #AD0000;
+    font-size: 14px;
+    margin-top: 5px;
+}

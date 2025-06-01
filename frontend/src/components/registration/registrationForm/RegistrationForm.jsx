@@ -11,20 +11,24 @@ const RegistrationForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [selectedRole, setSelectedRole] = useState('Администратор');
+    const [passwordError, setPasswordError] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (password !== confirmPassword) {
+            setPasswordError(true);
+            return;
+        }
+
         const userData = {
             full_name: fullname,
             email: email,
-            password: password,
-            role: selectedRole
+            password: password
         };
 
         try {
-            const response = await axios.post('http://localhost:8080/register', userData);
+            const response = await axios.patch('http://localhost:8080/register', userData);
             alert(response.data);
             navigate('/auth');
         } catch (error) {
@@ -38,14 +42,14 @@ const RegistrationForm = () => {
             <h1 className="title">Регистрация</h1>
             <p className="subtitle">Введите ваши данные для регистрации</p>
             <form onSubmit={handleSubmit}>
-                {/* <input
+                <input
                     type="text"
                     placeholder="ФИО"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
                     required
                     className="form-input"
-                /> */}
+                />
 
                 {/* <select
                     value={selectedRole}
@@ -77,11 +81,12 @@ const RegistrationForm = () => {
                 <input
                     type="password"
                     placeholder="Подтверждение пароля"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="form-input"
+                    className={`form-input ${passwordError ? 'error-border' : ''}`} 
                 />
+                {passwordError && <span className="error-message">Пароли не совпадают!</span>}
                 <button type="submit" className="submit-btn">Регистрация</button>
             </form>
         </div>
