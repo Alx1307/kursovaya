@@ -51,17 +51,6 @@ const RegistrationForm = () => {
                     className="form-input"
                 />
 
-                {/* <select
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value)}
-                    required
-                    className="form-select"
-                >
-                    <option value="Администратор">Администратор</option>
-                    <option value="Библиотекарь">Библиотекарь</option>
-                    <option value="Библиограф">Библиограф</option>
-                </select> */}
-
                 <input
                     type="email"
                     placeholder="Email"

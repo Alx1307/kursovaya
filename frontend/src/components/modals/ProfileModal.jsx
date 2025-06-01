@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Divider, Button, TextField, IconButton } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,8 +17,18 @@ const style = {
 };
 
 const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditing }) => {
+  const initialValues = {
+    full_name: userInfo?.full_name  || '',
+    email: userInfo?.email || '',
+    role: userInfo?.role || ''
+  };
+
   const [isEditing, setIsEditing] = useState(false);
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(initialValues);
+
+  useEffect(() => {
+    setFormValues(initialValues);
+  }, [userInfo]);
 
   const handleSubmit = async () => {
     try {
@@ -50,13 +60,13 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
   };
 
   const handleCancel = () => {
-    setFormValues({});
+    setFormValues(initialValues);
     setIsEditing(false);
   };
 
   return (
     <Modal open={open} onClose={() => {
-      setFormValues({});
+      setFormValues(initialValues);
       setIsEditing(false);
       handleClose();
     }}>
@@ -132,7 +142,7 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
           <div style={{ display: 'flex', flexDirection: 'column', gap: '34px', marginTop: '40px', alignItems: 'stretch' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '220px' }}>
               <label style={{ fontSize: '20px', color: '#A44A3F', minWidth: '80px', textAlign: 'left' }}>ФИО:</label>
-              <TextField value={formValues.full_name || userInfo?.full_name || ''} onChange={(e) => setFormValues(prev => ({ ...prev, full_name: e.target.value }))}
+              <TextField value={formValues.full_name || ''} onChange={(e) => setFormValues(prev => ({ ...prev, full_name: e.target.value }))}
                   fullWidth InputLabelProps={{ shrink: true }} InputProps={{
                       style: {
                           maxWidth: '300px',
@@ -145,7 +155,7 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '220px' }}>
               <label style={{ fontSize: '20px', color: '#A44A3F', minWidth: '80px', textAlign: 'left' }}>Email:</label>
-              <TextField value={formValues.email || userInfo?.email || ''} onChange={(e) => setFormValues(prev => ({ ...prev, email: e.target.value }))}
+              <TextField value={formValues.email || ''} onChange={(e) => setFormValues(prev => ({ ...prev, email: e.target.value }))}
                   fullWidth InputLabelProps={{ shrink: true }} InputProps={{
                       style: {
                           maxWidth: '300px',
@@ -158,8 +168,8 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '220px' }}>
               <label style={{ fontSize: '20px', color: '#A44A3F', minWidth: '80px', textAlign: 'left' }}>Роль:</label>
-              <TextField value={formValues.role || userInfo?.role || ''} onChange={(e) => setFormValues(prev => ({ ...prev, role: e.target.value }))}
-                  fullWidth InputLabelProps={{ shrink: true }} InputProps={{
+              <TextField value={formValues.role || ''} onChange={(e) => setFormValues(prev => ({ ...prev, role: e.target.value }))}
+                  fullWidth InputLabelProps={{ shrink: true }} inputProps={{ readOnly: true }} InputProps={{
                       style: {
                           maxWidth: '300px',
                           height: '55px',

@@ -199,7 +199,7 @@ class LibrarianController {
                 updatedData.email = req.body.email.trim();
             }
     
-            if (req.body.role) {
+            if (req.userData.role === 'Администратор' && req.body.role) {
                 updatedData.role = req.body.role.trim();
             }
     
