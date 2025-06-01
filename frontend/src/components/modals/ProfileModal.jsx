@@ -9,7 +9,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 630,
-  height: 500,
+  height: 450,
   bgcolor: '#fff',
   borderRadius: '10px',
   boxShadow: 24,
@@ -181,7 +181,7 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
           </div>
         )}
         
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '51px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
           {!isEditing ? (
             <Button variant="contained"
               style={{ backgroundColor: '#618D4A', color: '#fff', fontWeight: 'bold', fontSize: '16px', width: '260px', height: '54px', borderRadius: '10px', outline: 'none !important', boxShadow: 'none !important' }}

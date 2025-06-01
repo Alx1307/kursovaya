@@ -1,0 +1,44 @@
+.delete-user-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 630px;
+    height: 250px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    padding: 24px;
+}
+  
+.delete-user-modal-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.delete-user-modal .delete-user-modal-title{
+    color: #A44A3F;
+    font-weight: bold;
+}
+  
+.delete-user-modal-icon-container {
+    background-color: #618d4a7f;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-user-modal-info-section {
+    margin-top: 40px;
+}
+
+.delete-user-button-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}

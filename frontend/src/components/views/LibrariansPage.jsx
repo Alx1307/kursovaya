@@ -8,6 +8,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddUserModal from '../modals/AddUserModal';
 import EditUserModal from '../modals/EditUserModal';
+import ConfirmDeleteUserModal from '../modals/ConfirmDeleteUserModal';
+import axios from 'axios';
 import './Pages.css';
 
 const LibrariansPage = () => {
@@ -15,6 +17,8 @@ const LibrariansPage = () => {
   const [selectedLibrarian, setSelectedLibrarian] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const handleAddClick = () => {
     setShowAddModal(true);
@@ -23,6 +27,31 @@ const LibrariansPage = () => {
   const handleEditClick = (userId) => {
     setSelectedLibrarian(userId);
     setEditModalOpen(true);
+  };
+
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setDeleteModalOpen(true);
+  };
+
+  const deleteUser = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await axios.delete(`http://localhost:8080/librarian/delete/${userToDelete}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log('Сотрудник успешно удален');
+        refreshUsers();
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении сотрудника:', error);
+    } finally {
+      setDeleteModalOpen(false);
+      setUserToDelete(null);
+    }
   };
 
   const fetchLibrarians = async () => {
@@ -84,7 +113,7 @@ const LibrariansPage = () => {
   const librarianColumns = [
     {field: 'id', headerName: 'ID', flex: 0.1},
     {field: 'full_name', headerName: 'ФИО', flex: 0.3},
-    {field: 'email', headerName: 'E-mail', flex: 0.25},
+    {field: 'email', headerName: 'Email', flex: 0.25},
     {field: 'role', headerName: 'Роль', flex: 0.25},
     {
       field: 'action',
@@ -104,7 +133,7 @@ const LibrariansPage = () => {
               <IconButton className="IconButton" onClick={() => handleEditClick(params.row)}>
                 <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
               </IconButton>
-              <IconButton className="IconButton" >
+              <IconButton className="IconButton" onClick={() => handleDeleteClick(params.row.id)}>
                 <DeleteIcon style={{ color: 'black', width: 25, height: 25 }} />
               </IconButton>
             </>
@@ -118,10 +147,11 @@ const LibrariansPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="ФИО или e-mail" pageType="librarians" buttonText="Добавить" onAddClick={handleAddClick}/>
+        <SearchPanel placeholder="ФИО или email" pageType="librarians" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={librarianColumns} rows={librarianData}/>
         <AddUserModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshUsers} />
         <EditUserModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} userData={selectedLibrarian} reloadUserData={refreshUsers}/>
+        <ConfirmDeleteUserModal open={deleteModalOpen} handleClose={() => setDeleteModalOpen(false)} handleConfirm={deleteUser} />
       </div>
     </div>
   );

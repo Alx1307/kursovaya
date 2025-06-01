@@ -162,12 +162,22 @@ class LibrarianController {
                 }
             }
 
+            const adminCount = await Librarian.count({
+                where: { role: 'Администратор' }
+            });
+
             const librarian = await Librarian.findOne({
                 where: { librarian_id },
             });
 
             if (!librarian) {
                 return res.status(404).send('Библиотекарь не найден.');
+            }
+
+            if (librarian.role === 'Администратор') {
+                if (adminCount <= 1) {
+                    return res.status(400).send('Нельзя удалить последнего администратора.');
+                }
             }
 
             await librarian.destroy();
