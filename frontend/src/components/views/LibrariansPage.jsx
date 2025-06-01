@@ -7,15 +7,22 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddUserModal from '../modals/AddUserModal';
+import EditUserModal from '../modals/EditUserModal';
 import './Pages.css';
 
 const LibrariansPage = () => {
   const [librarianData, setLibrarianData] = useState([]);
-  const [selectedLibrarianId, setSelectedLibrarianId] = useState(null);
+  const [selectedLibrarian, setSelectedLibrarian] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleAddClick = () => {
     setShowAddModal(true);
+  };
+
+  const handleEditClick = (userId) => {
+    setSelectedLibrarian(userId);
+    setEditModalOpen(true);
   };
 
   const fetchLibrarians = async () => {
@@ -94,7 +101,7 @@ const LibrariansPage = () => {
         }}
         >
             <>
-              <IconButton className="IconButton">
+              <IconButton className="IconButton" onClick={() => handleEditClick(params.row)}>
                 <EditIcon style={{ color: 'black', width: 25, height: 25 }} />
               </IconButton>
               <IconButton className="IconButton" >
@@ -114,6 +121,7 @@ const LibrariansPage = () => {
         <SearchPanel placeholder="ФИО или e-mail" pageType="librarians" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={librarianColumns} rows={librarianData}/>
         <AddUserModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshUsers} />
+        <EditUserModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} userData={selectedLibrarian} reloadUserData={refreshUsers}/>
       </div>
     </div>
   );

@@ -1,31 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select, MenuItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import LocalLibrary from '@mui/icons-material/LocalLibrary';
-import './styles/EditReaderModal.css';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import './styles/EditUserModal.css';
 
-const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) => {
+const EditUserModal = ({ open, handleClose, userData, reloadUserData }) => {
     const initialValues = {
-        name: readerData?.name || '',
-        card_number: readerData?.card_number || '',
-        birth_date: readerData?.birth_date ? new Date(readerData.birth_date).toISOString().split("T")[0] : "",
-        phone: readerData?.phone || '',
-        hall_id: readerData?.hall_id || ''
+        full_name: userData?.full_name || '',
+        email: userData?.email || '',
+        role: userData?.role || ''
     };
 
     const [formValues, setFormValues] = useState(initialValues);
 
     useEffect(() => {
         setFormValues(initialValues);
-    }, [readerData]);
+    }, [userData]);
 
     const handleSubmit = async () => {
         try {
             const editedData = formValues;
-            const reader_id = readerData.reader_id;
+            const librarian_id = userData.librarian_id;
             const authToken = localStorage.getItem('authToken');
 
-            const response = await fetch(`http://localhost:8080/readers/edit/${reader_id}`, {
+            const response = await fetch(`http://localhost:8080/librarian/edit/${librarian_id}`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${authToken}`,
@@ -35,9 +33,9 @@ const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) =>
             });
 
             if (response.ok) {
-                alert('Читатель успешно обновлен!');
+                alert('Сотрудник успешно обновлен!');
                 handleClose();
-                reloadReaderData();
+                reloadUserData();
             } else {
                 alert('Ошибка при отправке данных.');
             }
@@ -54,14 +52,14 @@ const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) =>
 
     return (
         <Modal open={open} onClose={handleClose}>
-        <Box className="edit-reader-modal">
-            <div className="edit-reader-modal-header">
-            <div className="edit-reader-modal-icon-container">
-                <LocalLibrary style={{ color: '#000', fontSize: '30px' }} />
+        <Box className="edit-user-modal">
+            <div className="edit-user-modal-header">
+            <div className="edit-user-modal-icon-container">
+                <PeopleAltIcon style={{ color: '#000', fontSize: '30px' }} />
             </div>
             <div style={{ flexGrow: 1, textAlign: 'center' }}>
-                <Typography variant="h6" component="div" className="edit-reader-modal-title">
-                Редактирование читателя
+                <Typography variant="h6" component="div" className="edit-user-modal-title">
+                Редактирование сотрудника
                 </Typography>
             </div>
             <div>
@@ -72,69 +70,46 @@ const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) =>
             </div>
             <Divider style={{ backgroundColor: '#A44A3F', height: '1px' }} />
             
-            {readerData && (
-            <div className="edit-reader-modal-info-section">
+            {userData && (
+            <div className="edit-user-modal-info-section">
                 <div className="edit-modal-row">
                 <label className="edit-modal-label">ФИО:</label>
                 <TextField
                     className="edit-modal-textfield"
-                    value={formValues.name || ""}
+                    value={formValues.full_name || ""}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, full_name: e.target.value }))}
                 />
                 </div>
 
                 <div className="edit-modal-row">
-                <label className="edit-modal-label">№ читательского билета:</label>
+                <label className="edit-modal-label">Email:</label>
                 <TextField
                     className="edit-modal-textfield"
-                    value={formValues.card_number || ""}
+                    value={formValues.email || ""}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, card_number: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, email: e.target.value }))}
                 />
                 </div>
 
                 <div className="edit-modal-row">
-                <label className="edit-modal-label">Дата рождения:</label>
-                <TextField
-                    className="edit-modal-textfield"
-                    type="date"
-                    value={formValues.birth_date || ""}
-                    InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, birth_date: e.target.value }))}
-                />
-                </div>
-
-                <div className="edit-modal-row">
-                <label className="edit-modal-label">Телефон:</label>
-                <TextField
-                    className="edit-modal-textfield"
-                    value={formValues.phone || ""}
-                    InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    onChange={(e) => setFormValues(prev => ({ ...prev, phone: e.target.value }))}
-                />
-                </div>
-
-                <div className="edit-modal-row">
-                <label className="edit-modal-label">ID зала:</label>
+                <label className="edit-modal-label">Роль:</label>
                 <Select
                     style={{ maxWidth: '300px', height: '40px', borderRadius: '12px', border: '1px solid #A44A3F', marginLeft: 'auto' }}
+                    value={formValues.role || ""}
+                    InputLabelProps={{ shrink: true }}
                     fullWidth
-                    name="hall_id"
-                    value={formValues.hall_id}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, hall_id: e.target.value }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, role: e.target.value }))}
                 >
-                    {[1, 2, 3, 4, 5].map((hallId) => (
-                        <MenuItem key={hallId} value={hallId}>{hallId}</MenuItem>
-                    ))}
+                    {["Администратор", "Библиограф", "Библиотекарь"].map((role) => (
+                            <MenuItem key={role} value={role}>{role}</MenuItem>
+                        ))}
                 </Select>
                 </div>
 
-                <div className='edit-reader-button-container'>
+                <div className='edit-user-button-container'>
                     <Button 
                         style={{ backgroundColor: 'rgba(167, 109, 96, 0.7)', color: '#000', fontWeight: 'bold', fontSize: '16px', width: '260px', height: '54px', borderRadius: '10px', outline: 'none !important', boxShadow: 'none !important' }}
                         onClick={handleCancel}>
@@ -153,4 +128,4 @@ const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) =>
     );
 };
 
-export default EditReaderModal;
+export default EditUserModal;
