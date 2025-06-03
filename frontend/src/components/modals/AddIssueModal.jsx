@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import axios from 'axios';
 import './styles/AddIssueModal.css';
+import { toast } from 'react-toastify';
 
 const AddIssueModal = ({ open, handleClose, onSuccess, initialBookId }) => {
     const [formValues, setFormValues] = useState({
@@ -32,15 +33,15 @@ const AddIssueModal = ({ open, handleClose, onSuccess, initialBookId }) => {
           );
     
           if (response.status === 201) {
-            alert('Книга успешно выдана!');
+            toast.success('Книга успешно выдана!');
             handleClose();
             onSuccess();
             setFormValues(resetFormValues());
           } else {
-            alert('Ошибка при выдаче книги.');
+            toast.error('Ошибка при выдаче книги.');
           }
         } catch (err) {
-          console.log('Передаваемые данные:', formValues);
+          toast.error('Ошибка при выдаче книги.');
           console.error('Ошибка при выдаче книги:', err.response?.data || err.message);
         }
     };

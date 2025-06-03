@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import LocalLibrary from '@mui/icons-material/LocalLibrary';
 import axios from 'axios';
 import './styles/AddReaderModal.css';
+import { toast } from 'react-toastify';
 
 const resetFormValues = () => ({
     name: '',
@@ -30,16 +31,16 @@ const AddReaderModal = ({ open, handleClose, onSuccess }) => {
           );
     
           if (response.status === 201) {
-            alert('Читатель успешно добавлен!');
+            toast.success('Читатель успешно добавлен!');
             handleClose();
             onSuccess();
             setFormValues(resetFormValues());
           } else {
-            alert('Ошибка при добавлении читателя.');
+            toast.error('Ошибка при добавлении читателя.');
           }
         } catch (err) {
           console.error('Ошибка при добавлении читателя:', err.response?.data || err.message);
-          alert('Ошибка при добавлении читателя.');
+          toast.error('Ошибка при добавлении читателя.');
         }
     };
 

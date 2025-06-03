@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select,
 import CloseIcon from '@mui/icons-material/Close';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import './styles/EditUserModal.css';
+import { toast } from 'react-toastify';
 
 const EditUserModal = ({ open, handleClose, userData, reloadUserData }) => {
     const initialValues = {
@@ -33,15 +34,15 @@ const EditUserModal = ({ open, handleClose, userData, reloadUserData }) => {
             });
 
             if (response.ok) {
-                alert('Сотрудник успешно обновлен!');
+                toast.success('Сотрудник успешно обновлен!');
                 handleClose();
                 reloadUserData();
             } else {
-                alert('Ошибка при отправке данных.');
+                toast.error('Ошибка при отправке данных.');
             }
         } catch (err) {
             console.error('Ошибка: ', err);
-            alert('Что-то пошло не так.');
+            toast.error('Ошибка при редактировании сотрудника.');
         }
     };
 

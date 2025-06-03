@@ -14,6 +14,8 @@ import AddBookModal from '../modals/AddBookModal';
 import AddIssueModal from '../modals/AddIssueModal';
 import axios from 'axios';
 import './Pages.css';
+import { toast } from 'react-toastify';
+import api from '../../api/index';
 
 const BooksPage = () => {
   const [booksData, setBooksData] = useState([]);
@@ -68,10 +70,11 @@ const BooksPage = () => {
         },
       });
       if (response.status === 200) {
-        console.log('Книга успешно удалена');
+        toast.success('Книга успешно удалена');
         refreshBooks();
       }
     } catch (error) {
+      toast.error('Ошибка при удалении книги.');
       console.error('Ошибка при удалении книги:', error);
     } finally {
       setDeleteModalOpen(false);
@@ -117,7 +120,7 @@ const BooksPage = () => {
           }
         };
 
-        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const response = await api.get('http://localhost:8080/librarian/data', config);
         const userData = response.data;
         setDecodedRole(userData.role);
       } catch (err) {
@@ -126,36 +129,6 @@ const BooksPage = () => {
     };
 
     fetchUserRole();
-
-    const fetchBooks = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-
-        const response = await fetch('http://localhost:8080/books/all', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-
-        if (!response.ok) throw new Error('Ошибка загрузки книг.');
-
-        const data = await response.json();
-
-        console.log('Данные с сервера:', data);
-
-        const processedData = data.map((item) => ({
-            ...item,
-            id: item.book_id,
-        }));
-
-        console.log('Обработанные данные:', processedData);
-
-        setBooksData(processedData);
-      } catch (err) {
-        console.error('Ошибка загрузки книг:', err);
-      }
-    };
 
     fetchBooks();
   }, []);

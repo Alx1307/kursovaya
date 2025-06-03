@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select,
 import CloseIcon from '@mui/icons-material/Close';
 import LocalLibrary from '@mui/icons-material/LocalLibrary';
 import './styles/EditReaderModal.css';
+import { toast } from 'react-toastify';
 
 const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) => {
     const initialValues = {
@@ -35,15 +36,15 @@ const EditReaderModal = ({ open, handleClose, readerData, reloadReaderData }) =>
             });
 
             if (response.ok) {
-                alert('Читатель успешно обновлен!');
+                toast.success('Читатель успешно обновлен!');
                 handleClose();
                 reloadReaderData();
             } else {
-                alert('Ошибка при отправке данных.');
+                toast.error('Ошибка при отправке данных.');
             }
         } catch (err) {
             console.error('Ошибка: ', err);
-            alert('Что-то пошло не так.');
+            toast.error('Ошибка при редактировании читателя.');
         }
     };
 

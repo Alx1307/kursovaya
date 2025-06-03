@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Divider, IconButton, Button } from '
 import CloseIcon from '@mui/icons-material/Close';
 import BookIcon from '@mui/icons-material/Book';
 import './styles/EditBookModal.css';
+import { toast } from 'react-toastify';
 
 const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
     const initialValues = {
@@ -53,15 +54,15 @@ const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
             });
 
             if (response.ok) {
-                alert('Книга успешно обновлена!');
+                toast.success('Книга успешно обновлена!');
                 handleClose();
                 reloadBookData();
             } else {
-                alert('Ошибка при отправке данных.');
+                toast.error('Ошибка при отправке данных.');
             }
         } catch (err) {
             console.error('Ошибка: ', err);
-            alert('Что-то пошло не так.');
+            toast.error('Ошибка при редактировании книги.');
         }
     };
 

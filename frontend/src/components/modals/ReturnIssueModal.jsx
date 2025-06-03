@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select,
 import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import './styles/ReturnIssueModal.css';
+import { toast } from 'react-toastify';
 
 const ReturnIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
     const initialValue = {
@@ -35,14 +36,14 @@ const ReturnIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => 
           });
     
           if (response.status === 200) {
-            alert('Книга успешно возвращена!');
+            toast.success('Книга успешно возвращена!');
             handleClose();
             reloadIssueData();
           } else {
-            alert('Ошибка при возврате книги.');
+            toast.error('Ошибка при возврате книги.');
           }
         } catch (err) {
-          console.log('Передаваемые данные:', formValues);
+          toast.error('Ошибка при возврате книги.');
           console.error('Ошибка при возврате книги:', err.response?.data || err.message);
         }
     };

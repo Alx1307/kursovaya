@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import axios from 'axios';
 import './styles/AddUserModal.css';
+import { toast } from 'react-toastify';
 
 const resetFormValues = () => ({
     email: '',
@@ -26,15 +27,15 @@ const AddUserModal = ({ open, handleClose, onSuccess }) => {
           );
     
           if (response.status === 201) {
-            alert('Сотрудник успешно добавлен!');
+            toast.success('Сотрудник успешно добавлен!');
             handleClose();
             onSuccess();
             setFormValues(resetFormValues());
           } else {
-            alert('Ошибка при добавлении сотрудника.');
+            toast.error('Ошибка при добавлении сотрудника.');
           }
         } catch (err) {
-          console.log('Передаваемые данные:', formValues);
+          toast.error('Ошибка при добавлении сотрудника.');
           console.error('Ошибка при добавлении сотрудника:', err.response?.data || err.message);
         }
     };

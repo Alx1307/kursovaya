@@ -1,9 +1,17 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
-const checkAuthToken = () => {
-    const token = localStorage.getItem('authToken');
-    return !!token && !isExpired(token);
+const decodeJWT = (jwt) => {
+    try {
+        const base64Url = jwt.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) =>
+            `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`
+        ).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (err) {
+        console.error(err);
+        return {};
+    }
 };
 
 const isExpired = (token) => {
@@ -12,49 +20,64 @@ const isExpired = (token) => {
     return Date.now() >= expirationTime;
 };
 
-const decodeJWT = (jwt) => {
-    try {
-        const base64Url = jwt.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    } catch (err) {
-        return {};
-    }
+async function logoutUser() {
+    localStorage.removeItem('authToken');
+
+    window.location.href = "/auth?tokenExpired=true";
+}
+
+const instance = axios.create({
+    timeout: 5000,
+});
+
+let inactivityTimer;
+const resetInactivityTimer = () => {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        logoutUser ();
+    }, 60000);
 };
 
-const instance = axios.create({});
+instance.interceptors.request.use(async (config) => {
+    const token = localStorage.getItem('authToken');
+    if (!token || isExpired(token)) {
+        await logoutUser();
+        throw new Error("Ваш токен устарел");
+    }
 
-instance.interceptors.request.use(
-    config => {
-        const token = localStorage.getItem('authToken');
-        if (checkAuthToken()) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    error => Promise.reject(error)
-);
+    config.headers.Authorization = `Bearer ${token}`;
+    resetInactivityTimer();
+    return config;
+}, (error) => Promise.reject(error));
 
 instance.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response?.status === 401 || !checkAuthToken()) {
-            localStorage.removeItem('authToken');
-            toast.error('Срок действия вашего токена истек.', {
-                position: "top-center",
-                autoClose: 5000,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            window.location.href = "/auth";
+    (response) => {
+        resetInactivityTimer();
+        return response;
+    },
+    async (error) => {
+        if (error.response?.status === 401) {
+            await logoutUser();
         }
         return Promise.reject(error);
     }
 );
+
+const addInactivityListeners = () => {
+    window.addEventListener('mousemove', resetInactivityTimer);
+    window.addEventListener('keydown', resetInactivityTimer);
+    window.addEventListener('click', resetInactivityTimer);
+    window.addEventListener('scroll', resetInactivityTimer);
+};
+const removeInactivityListeners = () => {
+    window.removeEventListener('mousemove', resetInactivityTimer);
+    window.removeEventListener('keydown', resetInactivityTimer);
+    window.removeEventListener('click', resetInactivityTimer);
+    window.removeEventListener('scroll', resetInactivityTimer);
+};
+
+addInactivityListeners();
+
+window.addEventListener('beforeunload', removeInactivityListeners);
 
 export default instance;

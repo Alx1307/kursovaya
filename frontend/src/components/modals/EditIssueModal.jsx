@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Divider, IconButton, Button, Select,
 import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import './styles/EditIssueModal.css';
+import { toast } from 'react-toastify';
 
 const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
     function transformDate(date) {
@@ -40,13 +41,14 @@ const EditIssueModal = ({ open, handleClose, issueData, reloadIssueData }) => {
           });
     
           if (response.status === 200) {
-            alert('Дата возврата успешно изменена!');
+            toast.success('Дата возврата успешно изменена!');
             handleClose();
             reloadIssueData();
           } else {
-            alert('Ошибка при изменении даты возврата.');
+            toast.error('Ошибка при изменении даты возврата.');
           }
         } catch (err) {
+          toast.error('Ошибка при изменении даты возврата.');
           console.error('Ошибка при изменении даты возврата:', err.response?.data || err.message);
         }
     };

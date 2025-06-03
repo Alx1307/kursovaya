@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Divider, Button, TextField, IconButton } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
 
 const style = {
   position: 'absolute',
@@ -46,16 +47,16 @@ const ProfileModal = ({ userInfo, open, handleClose, reloadUserData, resetEditin
       });
 
       if (response.ok) {
-        alert('Профиль успешно обновлён!');
+        toast.success('Профиль успешно обновлён!');
         handleClose();
         reloadUserData();
         resetEditing();
       } else {
-        alert('Ошибка при отправке данных.');
+        toast.error('Ошибка при отправке данных.');
       }
     } catch (err) {
       console.error('Ошибка:', err);
-      alert('Что-то пошло не так.');
+      toast.error('Ошибка при редактировании профиля');
     }
   };
 

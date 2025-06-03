@@ -7,6 +7,7 @@ import HallReadersModal from '../modals/HallReadersModal';
 import SearchPanel from '../search/SearchPanel';
 import IconButton from '@mui/material/IconButton';
 import './Pages.css';
+import api from '../../api/index';
 
 const HallsPage = () => {
   const [hallData, setHallData] = useState([]);
@@ -18,21 +19,14 @@ const HallsPage = () => {
     const fetchHalls = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
-
-        const response = await fetch('http://localhost:8080/halls/all', {
-          method: 'GET',
+        const response = await api.get('http://localhost:8080/halls/all', {
           headers: {
             'Authorization': `Bearer ${authToken}`,
           },
         });
-
-        if (!response.ok) throw new Error(`Ошибка загрузки залов.`);
-
-        const data = await response.json();
-
-        setHallData(data.map(item => ({
-            ...item,
-            id: item.hall_id,
+        setHallData(response.data.map(item => ({
+          ...item,
+          id: item.hall_id,
         })));
       } catch (err) {
         console.error("Ошибка загрузки залов:", err);
@@ -53,9 +47,8 @@ const HallsPage = () => {
         },
       });
 
-      if (!response.ok) throw new Error(`Ошибка загрузки читателей.`);
-
       const data = await response.json();
+      
       setReadersList(data);
     } catch (err) {
       console.error("Ошибка загрузки читателей:", err);

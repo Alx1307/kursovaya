@@ -5,6 +5,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 import ProfileModal from '../modals/ProfileModal';
+import { toast } from 'react-toastify';
+import api from '../../api/index';
 
 const Header = ({ token }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -25,14 +27,14 @@ const Header = ({ token }) => {
   const reloadUserData = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await axios.get('http://localhost:8080/librarian/data', {
+      const response = await api.get('http://localhost:8080/librarian/data', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setUserInfo(response.data);
     } catch (error) {
-      console.error('Ошибка загрузки:', error);
+      toast.error('Ошибка загрузки:', error);
     }
   };
 
@@ -49,21 +51,7 @@ const Header = ({ token }) => {
   const formattedDate = currentTime.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://localhost:8080/librarian/data', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserInfo(response.data);
-      } catch (error) {
-        console.error('Ошибка загрузки:', error);
-      }
-    };
-
-    fetchUserData();
+    reloadUserData();
   }, [token]);
 
   return (

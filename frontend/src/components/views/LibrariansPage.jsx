@@ -11,6 +11,8 @@ import EditUserModal from '../modals/EditUserModal';
 import ConfirmDeleteUserModal from '../modals/ConfirmDeleteUserModal';
 import axios from 'axios';
 import './Pages.css';
+import { toast } from 'react-toastify';
+import api from '../../api/index';
 
 const LibrariansPage = () => {
   const [librarianData, setLibrarianData] = useState([]);
@@ -43,10 +45,11 @@ const LibrariansPage = () => {
         },
       });
       if (response.status === 200) {
-        console.log('Сотрудник успешно удален');
+        toast.success('Сотрудник успешно удален');
         refreshUsers();
       }
     } catch (error) {
+      toast.error('Ошибка при удалении сотрудника.');
       console.error('Ошибка при удалении сотрудника:', error);
     } finally {
       setDeleteModalOpen(false);
@@ -56,20 +59,8 @@ const LibrariansPage = () => {
 
   const fetchLibrarians = async () => {
     try {
-      const authToken = localStorage.getItem('authToken');
-
-      const response = await fetch('http://localhost:8080/librarian/all', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-        },
-      });
-
-      if (!response.ok) throw new Error(`Ошибка загрузки сотрудников.`);
-
-      const data = await response.json();
-
-      setLibrarianData(data.map(item => ({
+      const response = await api.get('http://localhost:8080/librarian/all');
+      setLibrarianData(response.data.map(item => ({
         ...item,
         id: item.librarian_id,
       })));
@@ -79,30 +70,6 @@ const LibrariansPage = () => {
   };
 
   useEffect(() => {
-    const fetchLibrarians = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-
-        const response = await fetch('http://localhost:8080/librarian/all', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-
-        if (!response.ok) throw new Error(`Ошибка загрузки сотрудников.`);
-
-        const data = await response.json();
-
-        setLibrarianData(data.map(item => ({
-          ...item,
-          id: item.librarian_id,
-        })));
-      } catch (err) {
-        console.error("Ошибка загрузки сотрудников:", err);
-      }
-    };
-
     fetchLibrarians();
   }, []);
 

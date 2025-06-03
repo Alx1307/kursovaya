@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import ReturnIssueModal from '../modals/ReturnIssueModal';
 import axios from 'axios';
 import './Pages.css';
+import api from '../../api/index';
 
 const IssuePage = () => {
   const [issueData, setIssueData] = useState([]);
@@ -85,7 +86,7 @@ const IssuePage = () => {
           }
         };
 
-        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const response = await api.get('http://localhost:8080/librarian/data', config);
         const userData = response.data;
         setDecodedRole(userData.role);
       } catch (err) {
@@ -94,34 +95,6 @@ const IssuePage = () => {
     };
 
     fetchUserRole();
-
-    const fetchIssues = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-
-        const response = await fetch('http://localhost:8080/issues/all', { 
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-
-        if (!response.ok) throw new Error('Ошибка загрузки выданных книг.');
-
-        const data = await response.json();
-
-        const transformedData = data.map(item => ({
-          ...item,
-          id: item.issue_id,
-        }));
-
-        console.log(transformedData);
-
-        setIssueData(transformedData);
-      } catch (err) {
-        console.error('Ошибка загрузки выданных книг:', err);
-      }
-    };
 
     fetchIssues();
   }, []); 

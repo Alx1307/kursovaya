@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegistrationForm.css';
-import DvrIcon from '@mui/icons-material/Dvr'; 
+import DvrIcon from '@mui/icons-material/Dvr';
+import { toast } from 'react-toastify';
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -29,10 +30,11 @@ const RegistrationForm = () => {
 
         try {
             const response = await axios.patch('http://localhost:8080/register', userData);
-            alert(response.data);
+
+            toast.success('Регистрация прошла успешно!');
             navigate('/auth');
         } catch (error) {
-            alert(error.response ? error.response.data : 'Ошибка подключения к серверу');
+            toast.error(error.response ? error.response.data : 'Ошибка подключения к серверу');
         }
     };
 

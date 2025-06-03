@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './EnterForm.css';
-import DvrIcon from '@mui/icons-material/Dvr'; 
+import DvrIcon from '@mui/icons-material/Dvr';
+import { toast } from 'react-toastify';
 
 const EnterForm = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        if (queryParams.get('tokenExpired') === 'true') {
+            toast.error('Срок действия вашего токена истек. Необходима повторная авторизация', {
+                position: "top-center",
+                autoClose: 5000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }, [location]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,9 +41,10 @@ const EnterForm = () => {
 
             localStorage.setItem("authToken", token);
 
+            toast.success('Авторизация прошла успешно!');
             navigate('/main');
         } catch (error) {
-            alert(error.response ? error.response.data : 'Ошибка подключения к серверу');
+            toast.error(error.response ? error.response.data : 'Ошибка подключения к серверу');
         }
     };
 

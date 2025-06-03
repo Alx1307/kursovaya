@@ -14,6 +14,8 @@ import ReaderIssuesModal from '../modals/ReaderIssuesModal';
 import EditReaderModal from '../modals/EditReaderModal';
 import axios from 'axios';
 import './Pages.css';
+import { toast } from 'react-toastify';
+import api from '../../api/index';
 
 const ReadersPage = () => {
   const [readerData, setReaderData] = useState([]);
@@ -67,10 +69,11 @@ const ReadersPage = () => {
         },
       });
       if (response.status === 200) {
-        console.log('Читатель успешно удален');
+        toast.success('Читатель успешно удален');
         refreshReaders();
       }
     } catch (error) {
+      toast.error('Ошибка при удалении читателя.');
       console.error('Ошибка при удалении читателя:', error);
     } finally {
       setDeleteModalOpen(false);
@@ -115,8 +118,6 @@ const ReadersPage = () => {
         },
       });
 
-      if (!response.ok) throw new Error(`Ошибка загрузки выдач.`);
-
       const data = await response.json();
       setIssuesList(data);
     } catch (err) {
@@ -136,7 +137,7 @@ const ReadersPage = () => {
           }
         };
 
-        const response = await axios.get('http://localhost:8080/librarian/data', config);
+        const response = await api.get('http://localhost:8080/librarian/data', config);
         const userData = response.data;
         setDecodedRole(userData.role);
       } catch (err) {
@@ -145,32 +146,6 @@ const ReadersPage = () => {
     };
 
     fetchUserRole();
-
-    const fetchReaders = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-
-        const response = await fetch('http://localhost:8080/readers/all', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-
-        if (!response.ok) throw new Error(`Ошибка загрузки читателей.`);
-
-        const data = await response.json();
-
-        const transformedData = data.map((item) => ({
-            ...item,
-            id: item.reader_id,
-        }));
-
-        setReaderData(transformedData);
-      } catch (err) {
-        console.error("Ошибка загрузки читателей:", err);
-      }
-    };
 
     fetchReaders();
   }, []);

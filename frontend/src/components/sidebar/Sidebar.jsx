@@ -10,6 +10,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const menuItems = [
     { icon: HomeIcon, title: 'Главная', link: '/main' },
@@ -42,6 +43,7 @@ const Sidebar = () => {
             const userData = response.data;
             setDecodedRole(userData.role);
           } catch (err) {
+            toast.error('Ошибка при получении роли.');
             console.error('Ошибка при получении роли:', err.message);
           }
         };

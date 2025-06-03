@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import BookIcon from '@mui/icons-material/Book';
 import axios from 'axios';
 import './styles/AddBookModal.css';
+import { toast } from 'react-toastify';
 
 const resetFormValues = () => ({
     title: '',
@@ -49,14 +50,15 @@ const AddBookModal = ({ open, handleClose, onSuccess }) => {
           );
     
           if (response.status === 201) {
-            alert('Книга успешно добавлена!');
+            toast.success('Книга успешно добавлена!');
             handleClose();
             onSuccess();
             setFormValues(resetFormValues());
           } else {
-            alert('Ошибка при добавлении книги.');
+            toast.error('Ошибка при добавлении книги.');
           }
         } catch (err) {
+          toast.error('Ошибка при добавлении книги.');
           console.error('Ошибка при добавлении книги:', err.message);
         }
     };

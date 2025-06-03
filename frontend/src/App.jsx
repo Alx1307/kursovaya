@@ -14,22 +14,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  {/*const clearAuthTokenOnUnload = () => {
-    localStorage.removeItem("authToken");
-  };
-
-  useEffect(() => {
-    window.addEventListener('beforeunload', clearAuthTokenOnUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', clearAuthTokenOnUnload);
-    };
-  }, []);*/}
-
   return (
     <Router>
+      <ToastContainer />
       <Routes>
-        {/*<ToastContainer />*/}
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/auth" element={<AuthorizationPage />} />
 
