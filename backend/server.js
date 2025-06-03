@@ -12,6 +12,7 @@ const bookRoutes = require('./src/routes/bookRoutes');
 const readerRoutes = require('./src/routes/readerRoutes');
 const hallRoutes = require('./src/routes/hallRoutes');
 const issueRoutes = require('./src/routes/issueRoutes');
+const statisticsRoutes = require('./src/routes/statisticsRoutes');
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use('/books', bookRoutes);
 app.use('/readers', readerRoutes);
 app.use('/halls', hallRoutes);
 app.use('/issues', issueRoutes);
+app.use('/statistics', statisticsRoutes);
 
 //Swagger
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));

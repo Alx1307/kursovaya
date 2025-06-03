@@ -84,7 +84,7 @@ const EditBookModal = ({ open, handleClose, bookData, reloadBookData }) => {
                 </Typography>
             </div>
             <div>
-                <IconButton onClick={handleClose}>
+                <IconButton onClick={handleCancel}>
                 <CloseIcon style={{ color: '#A44A3F' }} />
                 </IconButton>
             </div>
