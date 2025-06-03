@@ -137,9 +137,18 @@ class StatisticsController {
         try {
             const expiredIssues = await Issue.findAll({
                 where: { status: 'Просрочена' },
-                attributes: ['issue_id', 'book_id', 'reader_id', 'issue_date', 'return_date', 'comment'],
+                attributes: ['issue_id', 'book_id', 'reader_id', 'issue_date', 'return_date', 'status'],
             });
-            return res.status(200).json(expiredIssues);
+            
+            const formattedIssues = expiredIssues.map(issue => {
+                return {
+                    ...issue.dataValues,
+                    issue_date: new Date(issue.issue_date).toLocaleDateString('ru-RU'),
+                    return_date: new Date(issue.return_date).toLocaleDateString('ru-RU'),
+                };
+            });
+
+            return res.status(200).json(formattedIssues);
         } catch (err) {
             console.error(err.message);
             return res.status(500).send(err.message);

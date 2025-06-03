@@ -62,8 +62,6 @@ const IssuePage = () => {
         id: item.issue_id,
       }));
 
-      console.log(transformedData);
-
       setIssueData(transformedData);
     } catch (err) {
       console.error('Ошибка загрузки выданных книг:', err);

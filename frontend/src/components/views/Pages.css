@@ -16,3 +16,8 @@ body, html {
     padding: 0;
     height: 100vh;
 }
+
+.table-header {
+    color: #A44A3F;
+    margin-bottom: 0px;
+}
