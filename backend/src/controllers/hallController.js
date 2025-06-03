@@ -43,7 +43,8 @@ class HallController {
     async getAllHallsData(req, res) {
         try {
             const allHalls = await Hall.findAll({
-                attributes: ['hall_id', 'number', 'specialization', 'seats_quantity']
+                attributes: ['hall_id', 'number', 'specialization', 'seats_quantity'],
+                order: [['hall_id', 'ASC']],
             });
 
             let result = [];

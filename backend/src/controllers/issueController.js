@@ -124,6 +124,7 @@ class IssueController {
         try {
             const issues = await this.Issue.findAll({
                 attributes: ['issue_id', 'book_id', 'reader_id', 'issue_date', 'return_date', 'status', 'comment'],
+                order: [['issue_id', 'ASC']]
             });
     
             if (!issues.length) {

@@ -138,7 +138,9 @@ class BookController {
 
     async getAllBooksData(req, res) {
         try {
-            const books = await this.Book.findAll();
+            const books = await this.Book.findAll({
+                order: [['book_id', 'ASC']],
+            });
 
             const result = [];
 

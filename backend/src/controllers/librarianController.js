@@ -142,7 +142,8 @@ class LibrarianController {
             }
     
             const allLibrarians = await Librarian.findAll({
-                attributes: ['librarian_id', 'full_name', 'email', 'role']
+                attributes: ['librarian_id', 'full_name', 'email', 'role'],
+                order: [['librarian_id', 'ASC']]
             });
     
             res.json(allLibrarians.map(librarian => librarian.toJSON()));

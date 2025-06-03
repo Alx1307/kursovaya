@@ -74,7 +74,9 @@ class ReaderController {
 
     async getAllReaders(req, res) {
         try {
-            const allReaders = await Reader.findAll();
+            const allReaders = await Reader.findAll({
+                order: [['reader_id', 'ASC']]
+            });
 
             res.json(allReaders.map(reader => reader.toJSON()));
         } catch (err) {
