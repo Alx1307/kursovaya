@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
-const TableComponent = ({ columns, rows, height = '75vh', width = '100%' }) => {
+const TableComponent = ({ columns, rows, height='75vh'}) => {
   const updatedColumns = columns.map(column => ({
     ...column,
     headerAlign: 'center',
@@ -9,7 +9,7 @@ const TableComponent = ({ columns, rows, height = '75vh', width = '100%' }) => {
 
   return (
     <div style={{ height: '100vh', overflowY: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10px' }}>
-      <div style={{ height: height, width: width, overflow: 'auto', border: '2px solid #A44A3F', borderRadius: '1px', margin: '0'}}>
+      <div style={{ height: height, width: '100%', overflow: 'auto', border: '2px solid #A44A3F', borderRadius: '1px', margin: '0'}}>
         <DataGrid
           rows={rows}
           columns={updatedColumns}

@@ -68,6 +68,23 @@ const IssuePage = () => {
     }
   };
 
+  const handleSearch = async (query) => {
+    try {
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch(`http://localhost:8080/issues/search?query=${query}&type=code`, { 
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+        });
+        if (!response.ok) throw new Error('Ошибка поиска.');
+        const data = await response.json();
+        setIssueData(data);
+    } catch (err) {
+        console.error('Ошибка при выполнении поиска:', err);
+    }
+  };
+
   const refreshIssues = () => {
     fetchIssues();
   };
@@ -149,7 +166,7 @@ const IssuePage = () => {
         if (isOverdue) {
           style = { fontWeight: 'bold', color: '#A44A3F', fontSize: '16px' };
         } else if (isReturned) {
-          style = { fontWeight: 'bold', color: 'green', fontSize: '16px' };
+          style = { fontWeight: 'bold', color: '#618d4a', fontSize: '16px' };
         }
         return (
           <span style={style}>
@@ -186,7 +203,7 @@ const IssuePage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать" onAddClick={handleAddClick}/>
+        <SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать" onAddClick={handleAddClick} onSearch={handleSearch}/>
         <TableComponent columns={issueColumns} rows={issueData} />
         <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
         <AddIssueModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshIssues} />

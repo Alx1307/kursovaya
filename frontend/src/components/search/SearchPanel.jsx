@@ -4,8 +4,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
 import './SearchPanel.css';
 
-const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
+const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick, onSearch }) => {
     const [decodedRole, setDecodedRole] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchUserRole = async () => {
@@ -44,6 +45,12 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
         }
     };
 
+    const handleSearch = () => {
+      if (onSearch) {
+          onSearch(searchQuery);
+      }
+    };
+
     return (
         <div className="search-panel">
         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -51,7 +58,9 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
             type="text" 
             placeholder={placeholder} 
             className="search-input" 
-            style={{ paddingLeft: '30px' }} 
+            style={{ paddingLeft: '30px' }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} 
           />
           <SearchIcon style={{
             position: 'absolute',
@@ -66,7 +75,7 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
             className='search-button'
             variant="contained" 
             style={{ marginLeft: '10px', height: '40px' }} 
-            onClick={() => console.log('Найти нажато')}
+            onClick={handleSearch}
           >
             Найти
           </button>

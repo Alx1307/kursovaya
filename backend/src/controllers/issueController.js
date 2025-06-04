@@ -6,6 +6,8 @@ const sequelize = database.sequelize;
 const Issue = require('../models/Issue');
 const Book = require('../models/Book');
 const Reader = require('../models/Reader');
+const IssueCodeSearchStrategy = require('../strategy/issueCodeSearchStrategy');
+const IssueReaderSearchStrategy = require('../strategy/issueReaderSearchStrategy');
 
 class IssueController {
     constructor(IssueModel, BookModel, ReaderModel) {
@@ -231,6 +233,33 @@ class IssueController {
             await existingIssue.save();
     
             return res.status(200).send('Выдача успешно обновлена.');
+        } catch (err) {
+            console.error(err.message);
+            return res.status(500).send(err.message);
+        }
+    }
+
+    async searchIssues(req, res) {
+        const { query, type } = req.query;
+
+        let searchStrategy;
+
+        if (type === 'code') {
+            searchStrategy = new IssueCodeSearchStrategy();
+        } else if (type === 'reader') {
+            searchStrategy = new IssueReaderSearchStrategy();
+        } else {
+            return res.status(400).json({ message: 'Некорректный тип поиска.' });
+        }
+        try {
+            const results = await searchStrategy.search(query);
+
+            const transformedData = results.map(item => ({
+                ...item,
+                id: item.issue_id,
+            }));
+
+            return res.status(200).json(transformedData);
         } catch (err) {
             console.error(err.message);
             return res.status(500).send(err.message);
