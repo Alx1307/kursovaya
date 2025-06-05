@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const StatisticsControllerBuilder = require('../controllers/statisticController');
+const StatisticsController = require('../controllers/statisticController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-const controller = new StatisticsControllerBuilder().build();
+const controller = new StatisticsController();
 
 router.get('/total/books', authMiddleware, controller.getTotalBooks.bind(controller));
 router.get('/total/readers', authMiddleware, controller.getTotalReaders.bind(controller));

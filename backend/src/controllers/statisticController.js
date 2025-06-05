@@ -7,14 +7,6 @@ const Hall = require('../models/Hall');
 const Issue = require('../models/Issue');
 
 class StatisticsController {
-    constructor(totalBooks, totalReaders, totalLibrarians, totalHalls, totalIssues) {
-        this.totalBooks = totalBooks;
-        this.totalReaders = totalReaders;
-        this.totalLibrarians = totalLibrarians;
-        this.totalHalls = totalHalls;
-        this.totalIssues = totalIssues;
-    }
-
     async getTotalBooks(req, res) {
         try {
             const totalBooks = await Book.count();
@@ -156,40 +148,4 @@ class StatisticsController {
     }
 }
 
-class StatisticsControllerBuilder {
-    constructor() {
-        this.totalBooks = null;
-        this.totalReaders = null;
-        this.totalLibrarians = null;
-        this.totalHalls = null;
-        this.totalIssues = null;
-    }
-    setTotalBooks(totalBooks) {
-        this.totalBooks = totalBooks;
-        return this;
-    }
-    setTotalReaders(totalReaders) {
-        this.totalReaders = totalReaders;
-        return this;
-    }
-    setTotalLibrarians(totalLibrarians) {
-        this.totalLibrarians = totalLibrarians;
-        return this;
-    }
-
-    setTotalHalls(totalHalls) {
-        this.totalHalls = totalHalls;
-        return this;
-    }
-
-    setTotalIssues(totalIssues) {
-        this.totalIssues = totalIssues;
-        return this;
-    }
-
-    build() {
-        return new StatisticsController(this.totalBooks, this.totalReaders, this.totalLibrarians, this.totalHalls, this.totalIssues);
-    }
-}
-
-module.exports = StatisticsControllerBuilder;
+module.exports = StatisticsController;
