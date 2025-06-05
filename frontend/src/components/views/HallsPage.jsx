@@ -4,7 +4,6 @@ import Header from '../header/Header';
 import TableComponent from '../table/Table';
 import LocallibraryIcon from '@mui/icons-material/LocalLibrary';
 import HallReadersModal from '../modals/HallReadersModal';
-import SearchPanel from '../search/SearchPanel';
 import IconButton from '@mui/material/IconButton';
 import './Pages.css';
 import api from '../../api/index';
@@ -110,7 +109,6 @@ const HallsPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="halls" buttonText="Добавить"/>
         <TableComponent columns={hallColumns} rows={hallData} />
         <HallReadersModal 
           readersList={readersList} 

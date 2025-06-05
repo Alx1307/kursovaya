@@ -239,32 +239,32 @@ class IssueController {
         }
     }
 
-    async searchIssues(req, res) {
-        const { query, type } = req.query;
+    // async searchIssues(req, res) {
+    //     const { query, type } = req.query;
 
-        let searchStrategy;
+    //     let searchStrategy;
 
-        if (type === 'code') {
-            searchStrategy = new IssueCodeSearchStrategy();
-        } else if (type === 'reader') {
-            searchStrategy = new IssueReaderSearchStrategy();
-        } else {
-            return res.status(400).json({ message: 'Некорректный тип поиска.' });
-        }
-        try {
-            const results = await searchStrategy.search(query);
+    //     if (type === 'code') {
+    //         searchStrategy = new IssueCodeSearchStrategy();
+    //     } else if (type === 'reader') {
+    //         searchStrategy = new IssueReaderSearchStrategy();
+    //     } else {
+    //         return res.status(400).json({ message: 'Некорректный тип поиска.' });
+    //     }
+    //     try {
+    //         const results = await searchStrategy.search(query);
 
-            const transformedData = results.map(item => ({
-                ...item,
-                id: item.issue_id,
-            }));
+    //         const transformedData = results.map(item => ({
+    //             ...item,
+    //             id: item.issue_id,
+    //         }));
 
-            return res.status(200).json(transformedData);
-        } catch (err) {
-            console.error(err.message);
-            return res.status(500).send(err.message);
-        }
-    }
+    //         return res.status(200).json(transformedData);
+    //     } catch (err) {
+    //         console.error(err.message);
+    //         return res.status(500).send(err.message);
+    //     }
+    // }
 }
 
 module.exports = IssueController;
