@@ -55,10 +55,10 @@ const AddBookModal = ({ open, handleClose, onSuccess }) => {
             onSuccess();
             setFormValues(resetFormValues());
           } else {
-            toast.error('Ошибка при добавлении книги.');
+            toast.error(err.message);
           }
         } catch (err) {
-          toast.error('Ошибка при добавлении книги.');
+          toast.error(err.message);
           console.error('Ошибка при добавлении книги:', err.message);
         }
     };

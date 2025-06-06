@@ -39,16 +39,6 @@ const Librarian = sequelize.define('Librarian', {
     password: {
         type: DataTypes.STRING(20),
         allowNull: true,
-        validate: {
-            // len: [8, 20],
-            // correct_password(value) {
-            //     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
-            //
-            //     if (!regex.test(value)) {
-            //         throw new Error('Пароль должен содержать латинские буквы, цифры и спецсимволы и иметь длину от 8 до 20 символов.');
-            //     }
-            // }
-        }
     },
     role: {
         type: DataTypes.STRING(20),

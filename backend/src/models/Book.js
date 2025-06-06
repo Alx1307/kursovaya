@@ -30,13 +30,13 @@ const Book = sequelize.define('Book', {
     isbn: {
         type: DataTypes.STRING(17),
         allowNull: false,
-        // validate: {
-        //     correct_isbn(value) {
-        //         if (!value.match(/^(97[89]\-)?(?:\d{1,5}-\d{1,7}-\d{1,6}-\d|\d{9}(\d|X))$/)) {
-        //             throw new Error('Некорректный ISBN.');
-        //         }
-        //     }
-        // },
+        validate: {
+            correct_isbn(value) {
+                if (!value.match(/^(97[89]\-)?(?:\d{1,5}-\d{1,7}-\d{1,6}-\d|\d{9}(\d|X))$/)) {
+                    throw new Error('Некорректный ISBN.');
+                }
+            }
+        },
         unique: {
             args: true,
             msg: 'Книга с таким ISBN уже зарегистрирована.'
@@ -46,13 +46,13 @@ const Book = sequelize.define('Book', {
     code: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        // validate: {
-        //     correct_code(value) {
-        //         if (!value.match(/^[0-9]{1,2}\.[0-9]{1,2}\/[А-Я]-[0-9]{1,2}$/)) {
-        //             throw new Error('Некорректный книжный шифр.');
-        //         }
-        //     }
-        // },
+        validate: {
+            correct_code(value) {
+                if (!value.match(/^[0-9]{1,2}\.[0-9]{1,2}\/[А-Я]-[0-9]{1,2}$/)) {
+                    throw new Error('Некорректный книжный шифр.');
+                }
+            }
+        },
         unique: {
             args: true,
             msg: 'Такой книжный шифр уже занят.'

@@ -35,6 +35,16 @@ class LibrarianController {
 
     async registerLibrarian(req, res) {
         const { full_name, email, password } = req.body;
+
+        const russianLettersRegex = /[А-Яа-яЁё]/;
+        if (russianLettersRegex.test(password)) {
+            return res.status(400).send('Пароль не должен содержать русские буквы.');
+        }
+
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&-])[A-Za-z\d@$!%*#?&-]{8,20}$/;
+        if (!regex.test(password)) {
+            return res.status(400).send('Пароль должен содержать латинские буквы, цифры и спецсимволы и иметь длину от 8 до 20 символов.');
+        }
         
         try {
             let librarian = await Librarian.findOne({ where: { email } });

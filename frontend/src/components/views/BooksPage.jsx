@@ -105,6 +105,7 @@ const BooksPage = () => {
         setBooksData(transformedData);
       } catch (err) {
         console.error("Ошибка загрузки книг:", err);
+        toast.error(err.message);
       }
   };
 

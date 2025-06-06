@@ -95,46 +95,48 @@ const SearchPanel = ({ placeholder, pageType, buttonText, onAddClick }) => {
 
     return (
         <div className="search-panel">
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <input
-          type="text"
-          placeholder={placeholder}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            flexGrow: 1,
-            padding: '10px 12px 10px 40px',
-            fontSize: 16,
-            borderRadius: 8,
-            border: '1px solid #d1d5db',
-            outline: 'none',
-            color: '#374151',
-            transition: 'border-color 0.2s ease-in-out'
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearch();
-          }}
-          aria-label="Поиск"
-          autoComplete="off"
-        />
-          <SearchIcon style={{
-            position: 'absolute',
-            left: '8px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#aaa',
-            pointerEvents: 'none',
-            fontSize: '20px',
-          }} />
-          <button 
-            className='search-button'
-            variant="contained" 
-            style={{ marginLeft: '10px', height: '40px' }} 
-            onClick={handleSearch}
-          >
-            Найти
-          </button>
-        </div>
+          {pageType !== 'issue' && (
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <input
+                type="text"
+                placeholder={placeholder}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  flexGrow: 1,
+                  padding: '10px 12px 10px 40px',
+                  fontSize: 16,
+                  borderRadius: 8,
+                  border: '1px solid #d1d5db',
+                  outline: 'none',
+                  color: '#374151',
+                  transition: 'border-color 0.2s ease-in-out'
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSearch();
+                }}
+                aria-label="Поиск"
+                autoComplete="off"
+              />
+              <SearchIcon style={{
+                position: 'absolute',
+                left: '8px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#aaa',
+                pointerEvents: 'none',
+                fontSize: '20px',
+              }} />
+              <button 
+                className='search-button'
+                variant="contained" 
+                style={{ marginLeft: '10px', height: '40px' }} 
+                onClick={handleSearch}
+              >
+                Найти
+              </button>
+            </div>
+        )}
 
         {shouldShowButton() && (
             <button className="add-button" onClick={onAddClick}>

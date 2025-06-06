@@ -186,7 +186,7 @@ const IssuePage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        {/*<SearchPanel placeholder="Шифр книги или № читательского билета" pageType="issue" buttonText="Выдать" onAddClick={handleAddClick} />*/}
+        <SearchPanel pageType="issue" buttonText="Выдать" onAddClick={handleAddClick} />
         <TableComponent columns={issueColumns} rows={issueData} />
         <ViewIssueModal open={modalOpen} handleClose={() => setModalOpen(false)} issueData={selectedIssue} />
         <AddIssueModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshIssues} />

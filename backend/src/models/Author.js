@@ -13,37 +13,37 @@ const Author = sequelize.define('Author', {
     surname: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        // validate: {
-        //     correct_surname(value) {
-        //         if (!value.match(/^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)$/)) {
-        //             throw new Error('Некорректная фамилия.');
-        //         }
-        //     }
-        // }
+        validate: {
+            correct_surname(value) {
+                if (value && !/^[А-Яа-яЁё\s-]+$/u.test(value)) {
+                    throw new Error('Некорректная фамилия. Фамилия должна содержать только русские буквы и может содержать дефис для составных фамилий.');
+                }
+            }
+        }
     },
 
     name: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        // validate: {
-        //     correct_name(value) {
-        //         if (!value.match(/^([А-ЯЁ][а-яё]+(\s[А-ЯЁ][а-яё]+)?)$/)) {
-        //             throw new Error('Некорректное имя.');
-        //         }
-        //     }
-        // }
+        validate: {
+            correct_name(value) {
+                if (value && !/^[А-Яа-яЁё\s-]+$/u.test(value)) {
+                    throw new Error('Некорректное имя. Имя должно содержать только русские буквы.');
+                }
+            }
+        }
     },
 
     patronymic: {
         type: DataTypes.STRING(20),
         allowNull: true,
-        // validate: {
-        //     correct_patronymic(value) {
-        //         if  (!value.match(/^[А-ЯЁ][а-яё]{1,}$/)) {
-        //             throw new Error('Некорректное отчество.');
-        //         }
-        //     }
-        // }
+        validate: {
+            correct_patronymic(value) {
+                if (value && !/^[А-Яа-яЁё\s-]+$/u.test(value)) {
+                    throw new Error('Некорректное отчество. Отчство должно содержать только русские буквы.');
+                }
+            }
+        }
     }
 }, {
     tableName: 'author',

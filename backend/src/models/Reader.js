@@ -13,11 +13,25 @@ const Reader = sequelize.define('Reader', {
     name: {
         type: DataTypes.STRING(60),
         allowNull: false,
+        validate: {
+            isRussianLetters(value) {
+                if (value && !/^[А-Яа-яЁё\s-]+$/u.test(value)) {
+                    throw new Error('Поле name должно содержать только русские буквы, пробелы или дефисы.');
+                }
+            }
+        }
     },
 
     card_number: {
         type: DataTypes.STRING(12),
         allowNull: false,
+        validate: {
+            isSevenDigits(value) {
+                if (!/^\d{7}$/.test(value)) {
+                    throw new Error('Номер читательского билета должен состоять из 7 цифр.');
+                }
+            }
+        },
         unique: {
             args: true,
             msg: 'Такой номер читательского билета уже занят.'
@@ -32,13 +46,13 @@ const Reader = sequelize.define('Reader', {
     phone: {
         type: DataTypes.STRING(16),
         allowNull: true,
-        // validate: {
-        //     correct_phone(value) {
-        //         if (!value.match(/^\+7 9[0-9]{2} [0-9]{3}-[0-9]{2}-[0-9]{2}$/)) {
-        //             throw new Error('Некорректный номер телефона.');
-        //         }
-        //     }
-        // },
+        validate: {
+            correct_phone(value) {
+                if (!value.match(/^\+7 9[0-9]{2} [0-9]{3}-[0-9]{2}-[0-9]{2}$/)) {
+                    throw new Error('Некорректный номер телефона.');
+                }
+            }
+        },
         unique: {
             args: true,
             msg: 'Читатель с таким номером телефона уже зарегистрирован.'
