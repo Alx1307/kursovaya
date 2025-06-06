@@ -217,7 +217,7 @@ const BooksPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="Название, автор, шифр или ISBN" pageType="books" buttonText="Добавить" onAddClick={handleAddClick}/>
+        <SearchPanel placeholder="Название или  шифр" pageType="books" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={booksColumns} rows={booksData} />
         <ViewBookModal open={modalOpen} handleClose={() => setModalOpen(false)} bookData={selectedBook} />
         <AddBookModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshBooks} />

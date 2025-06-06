@@ -13,6 +13,7 @@ const readerRoutes = require('./src/routes/readerRoutes');
 const hallRoutes = require('./src/routes/hallRoutes');
 const issueRoutes = require('./src/routes/issueRoutes');
 const statisticsRoutes = require('./src/routes/statisticsRoutes');
+const searchRoutes = require('./src/routes/searchRoutes');
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use('/readers', readerRoutes);
 app.use('/halls', hallRoutes);
 app.use('/issues', issueRoutes);
 app.use('/statistics', statisticsRoutes);
+app.use('/search', searchRoutes);
 
 //Swagger
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));

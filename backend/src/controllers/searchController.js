@@ -1,5 +1,3 @@
-const { BookSearchStrategy, ReaderSearchStrategy, LibrarianSearchStrategy, IssueSearchStrategy } = require('../strategy');
-
 class SearchController {
     constructor(strategy = null) {
       this.strategy = strategy;

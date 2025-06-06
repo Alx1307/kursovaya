@@ -11,7 +11,14 @@ const Librarian = sequelize.define('Librarian', {
     },
     full_name: {
         type: DataTypes.STRING(60),
-        allowNull: true
+        allowNull: true,
+        validate: {
+            isRussianLetters(value) {
+                if (value && !/^[А-Яа-яЁё\s-]+$/u.test(value)) {
+                    throw new Error('Поле full_name должно содержать только русские буквы, пробелы или дефисы.');
+                }
+            }
+        }
     },
     email: {
         type: DataTypes.STRING(30),

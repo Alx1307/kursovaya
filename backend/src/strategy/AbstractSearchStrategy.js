@@ -3,3 +3,5 @@ class SearchStrategy {
       throw new Error('Метод search должен быть реализован');
     }
 }
+
+module.exports = SearchStrategy;

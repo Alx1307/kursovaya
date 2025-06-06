@@ -20,13 +20,10 @@ class BookController {
             if (req.userData.role !== 'Библиограф') {
                 return res.status(403).send('Доступ запрещен.');
             }
-
             const { title, publish_year, isbn, code, quantity, authors } = req.body;
-
             if (!title) return res.status(400).send("Название книги обязательно.");
             if (!isbn) return res.status(400).send("ISBN книги обязателен.");
             if (!code) return res.status(400).send("Шифр книги обязателен.");
-        
             let newBook = await this.Book.create({
                 title,
                 publish_year,
@@ -37,37 +34,16 @@ class BookController {
             });
 
             if (authors && Array.isArray(authors)) {
-                for (let i = 0; i < authors.length; i++) {
-                    const currentAuthor = authors[i];
-
-                    if (!currentAuthor.surname || !currentAuthor.name) {
+                for (const currentAuthor of authors) {
+                    if (!currentAuthor.name) {
                         continue;
                     }
-
-                    let searchParams = { surname: currentAuthor.surname, name: currentAuthor.name };
-
-                    if (currentAuthor.patronymic) {
-                        searchParams.patronymic = currentAuthor.patronymic;
-                    }
-
-                    let existingAuthor = await this.Author.findOne({ where: searchParams });
-
-                    if (existingAuthor) {
-                        const authorId = existingAuthor.author_id;
-                        const bookId = newBook.book_id;
-                        await this.BookAuthor.create({ book_id: bookId, author_id: authorId });
-                    } else {
-                        const newAuthor = await this.Author.create(currentAuthor);
-                       
-                        const authorId = newAuthor.author_id;
-                        const bookId = newBook.book_id;
-                        await this.BookAuthor.create({ book_id: bookId, author_id: authorId });
-                    }
+                    const authorId = await this.createOrFindAuthor(currentAuthor);
+                    await this.BookAuthor.create({ book_id: newBook.book_id, author_id: authorId });
                 }
             }
-       
             res.status(201).send('Книга успешно добавлена.');
-        } catch(err) {
+        } catch (err) {
             console.error(err.message);
             res.status(500).send(err.message);
         }
@@ -205,7 +181,12 @@ class BookController {
     async createOrFindAuthor(attributes) {
         const { surname, name, patronymic } = attributes;
     
-        const searchParams = { surname, name };
+        const searchParams = { name };
+
+        if (surname) {
+            searchParams.surname = surname;
+        }
+
         if (patronymic) {
             searchParams.patronymic = patronymic;
         }
@@ -225,15 +206,12 @@ class BookController {
             if (req.userData.role !== 'Библиограф') {
                 return res.status(403).send('Доступ запрещен.');
             }
-    
             const { book_id } = req.params;
             const { title, publish_year, isbn, code, quantity, authorsArray } = req.body;
-    
             const book = await this.Book.findByPk(book_id);
             if (!book) {
                 return res.status(404).send('Книга не найдена.');
             }
-    
             await book.update({
                 title,
                 publish_year,
@@ -241,23 +219,18 @@ class BookController {
                 code,
                 quantity
             });
-    
+
             if (authorsArray && Array.isArray(authorsArray)) {
                 await this.BookAuthor.destroy({ where: { book_id: book_id } });
-    
                 for (let i = 0; i < authorsArray.length; i++) {
                     const currentAuthor = authorsArray[i];
-                    
-                    if (!currentAuthor.surname || !currentAuthor.name) {
+                    if (!currentAuthor.name) {
                         continue;
                     }
-    
                     const authorId = await this.createOrFindAuthor(currentAuthor);
-    
                     await this.BookAuthor.create({ book_id: book_id, author_id: authorId });
                 }
             }
-    
             res.status(200).send('Книга успешно обновлена.');
         } catch (err) {
             console.error(err.message);

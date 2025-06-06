@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
-const TableComponent = ({ columns, rows, height='75vh'}) => {
+const TableComponent = ({ columns, rows, height='65vh'}) => {
   const updatedColumns = columns.map(column => ({
     ...column,
     headerAlign: 'center',

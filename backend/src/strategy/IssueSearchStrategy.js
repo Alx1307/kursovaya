@@ -1,4 +1,6 @@
 const Issue = require('../models/Issue');
+const Book = require('../models/Book');
+const Reader = require('../models/Reader');
 const { Op } = require('sequelize');
 const SearchStrategy = require('./AbstractSearchStrategy');
 

@@ -216,7 +216,7 @@ const ReadersPage = () => {
       <Sidebar />
       <div className="content-container">
         <Header />
-        <SearchPanel placeholder="ФИО, номер телефона или № читательского билета" pageType="readers" buttonText="Добавить" onAddClick={handleAddClick}/>
+        <SearchPanel placeholder="Номер телефона или № читательского билета" pageType="readers" buttonText="Добавить" onAddClick={handleAddClick}/>
         <TableComponent columns={readerColumns} rows={readerData} />
         <ViewReaderModal open={modalOpen} handleClose={() => setModalOpen(false)} readerData={selectedUser} />
         <AddReaderModal open={showAddModal} handleClose={() => setShowAddModal(false)} onSuccess={refreshReaders} />
